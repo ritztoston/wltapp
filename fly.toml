@@ -1,4 +1,5 @@
 app = "wltapp-a555"
+primary_region = "sin"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
