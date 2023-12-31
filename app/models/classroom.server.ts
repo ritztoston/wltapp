@@ -31,6 +31,31 @@ export const createClassroom = async ({ name, userId }: Create) => {
   }
 };
 
+export const joinClassroom = async (
+  classroomId: string,
+  studentId: string,
+  moderatorId: string,
+) => {
+  if (studentId === moderatorId)
+    return "You are the moderator of this classroom";
+
+  try {
+    return await prisma.studentOnClassroom.create({
+      data: {
+        classroomId: classroomId,
+        studentId: studentId,
+      },
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === "P2002") {
+        return "You are already on this classroom.";
+      }
+    }
+    throw e;
+  }
+};
+
 export const getClassrooms = async (id: string) => {
   return prisma.classroom.findMany({
     where: {
@@ -46,6 +71,22 @@ export const getClassrooms = async (id: string) => {
           },
         },
       ],
+    },
+  });
+};
+
+export const getClassroomByName = async (name: string) => {
+  return prisma.classroom.findUnique({
+    where: {
+      name: name,
+    },
+    include: {
+      StudentOnClassroom: {
+        include: {
+          student: true,
+        },
+      },
+      User: true,
     },
   });
 };
