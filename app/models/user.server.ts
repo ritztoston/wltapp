@@ -1,4 +1,4 @@
-import { Prisma, StudentOnClassroom } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { Auth0Profile } from "remix-auth-auth0";
 
 import { prisma } from "~/db.server";
