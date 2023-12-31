@@ -1,7 +1,8 @@
 import { createCookie, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
-import { createDatabaseSessionStorage } from "./utilities/dbsessions";
+import { authenticator } from "~/auth0.server";
+import { createDatabaseSessionStorage } from "~/utilities/dbsessions";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -22,6 +23,30 @@ export async function getSession(request: Request) {
 export const sessionStorage = createDatabaseSessionStorage({
   cookie: sessionCookie,
 });
+
+export const login = async (request: Request) => {
+  const url = new URL(request.url);
+  const returnTo = url.searchParams.get("redirectTo") as string | null;
+
+  try {
+    return await authenticator.authenticate("auth0", request, {
+      successRedirect: returnTo ?? "/",
+      failureRedirect: "/login",
+    });
+  } catch (error) {
+    console.log("redirecting to login", error);
+    if (error instanceof Response) {
+      const returnToCookie = createCookie("returnToCookie", {
+        maxAge: 3600,
+      });
+      error.headers.append(
+        "Set-Cookie",
+        await returnToCookie.serialize(returnTo),
+      );
+    }
+    throw error;
+  }
+};
 
 export const logout = async (request: Request) => {
   const cookie = request.headers.get("Cookie");

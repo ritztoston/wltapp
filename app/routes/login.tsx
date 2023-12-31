@@ -1,10 +1,6 @@
-import { Form } from "@remix-run/react";
+import type { ActionFunction, LoaderFunction } from "@remix-run/server-runtime";
 
-// app/routes/login.tsx
-export default function Login() {
-  return (
-    <Form action="/auth/auth0" method="post">
-      <button>Login with Auth0</button>
-    </Form>
-  );
-}
+import { login } from "~/session.server";
+
+export const action: ActionFunction = ({ request }) => login(request);
+export const loader: LoaderFunction = ({ request }) => login(request);
