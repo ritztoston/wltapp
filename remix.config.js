@@ -5,6 +5,7 @@ module.exports = {
   cacheDirectory: "./node_modules/.cache/remix",
   ignoredRouteFiles: ["**/.*", "**/*.test.{ts,tsx}"],
   serverModuleFormat: "cjs",
+  serverDependenciesToBundle: [/^remix-utils.*/],
   routes(defineRoutes) {
     // uses the v1 convention, works in v1.15+ and v2
     return createRoutesFromFolders(defineRoutes);
