@@ -5,16 +5,6 @@ import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
 
-export type UserWithClassrooms = Prisma.UserGetPayload<{
-  include: {
-    StudentOnClassroom: {
-      include: {
-        classroom: true;
-      };
-    };
-  };
-}>;
-
 export const upsertUser = (profile: Auth0Profile) => {
   return prisma.user.upsert({
     where: { auth0Id: profile.id },
@@ -42,12 +32,5 @@ export const upsertUser = (profile: Auth0Profile) => {
 export const getUser = (id: string) => {
   return prisma.user.findUnique({
     where: { id: id },
-    include: {
-      StudentOnClassroom: {
-        include: {
-          classroom: true,
-        },
-      },
-    },
   });
 };
