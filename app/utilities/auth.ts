@@ -1,20 +1,21 @@
-import { User } from "@prisma/client";
-
 import { authenticator } from "~/auth0.server";
 import { getSession } from "~/session.server";
 
 import { urlParser } from ".";
+import { UserWithClassrooms, getUser } from "~/models/user.server";
 
-export const authenticate = async (request: Request) => {
+export const authenticate = async (
+  request: Request,
+): Promise<UserWithClassrooms> => {
   const session = await getSession(request);
-  const user = session.get("user") as User | null;
+  let user = session.get("user") as UserWithClassrooms | null;
 
   if (!user) {
     const path = urlParser(new URL(request.url).pathname);
-    return (await authenticator.isAuthenticated(request, {
+    user = (await authenticator.isAuthenticated(request, {
       failureRedirect: `/login?redirectTo=${path}`,
-    })) as User;
+    })) as UserWithClassrooms;
   }
 
-  return user;
+  return (await getUser(user.id)) as UserWithClassrooms;
 };
