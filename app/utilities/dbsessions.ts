@@ -1,36 +1,45 @@
-import { Cookie, CookieOptions, createSessionStorage } from "@remix-run/node";
+import type {
+  SessionData,
+  SessionStorage,
+  SessionIdStorageStrategy,
+} from "@remix-run/node";
+import { createSessionStorage } from "@remix-run/node";
 
 import { prisma } from "~/db.server";
 
-export const createDatabaseSessionStorage = ({
+export const createDatabaseSessionStorage = <
+  Data = SessionData,
+  FlashData = Data,
+>({
   cookie,
 }: {
-  cookie: Cookie | CookieOptions;
-}) => {
+  cookie: SessionIdStorageStrategy["cookie"];
+}): SessionStorage<Data, FlashData> => {
   return createSessionStorage({
     cookie,
     async createData(data, expires) {
       const exp = expires ? Math.round(expires.getTime() / 1000) : undefined;
-      const state = data["oauth2:state"] as string;
       const session = await prisma.session.create({
-        data: { ttl: exp, data: state },
+        data: { ttl: exp, data: JSON.stringify(data) },
       });
 
       return session.id;
     },
     async readData(id) {
       const data = await prisma.session.findUnique({ where: { id } });
-      return {
-        ["oauth2:state"]: data?.data,
-      };
+
+      if (data) {
+        return JSON.parse(data.data);
+      }
+
+      return null;
     },
     async updateData(id, data, expires) {
       const exp = expires ? Math.round(expires.getTime() / 1000) : undefined;
-      const state = data["oauth2:state"] as string;
 
       await prisma.session.update({
         where: { id },
-        data: { ttl: exp, data: state },
+        data: { ttl: exp, data: JSON.stringify(data) },
       });
     },
     async deleteData(id) {

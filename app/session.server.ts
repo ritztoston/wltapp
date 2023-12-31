@@ -2,7 +2,8 @@ import { createCookie, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { authenticator } from "~/auth0.server";
-import { createDatabaseSessionStorage } from "~/utilities/dbsessions";
+
+import { createDatabaseSessionStorage } from "./utilities/dbsessions";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -15,14 +16,25 @@ const sessionCookie = createCookie("__session", {
   secure: process.env.NODE_ENV === "production",
 });
 
-export async function getSession(request: Request) {
-  const cookie = request.headers.get("Cookie");
-  return sessionStorage.getSession(cookie);
-}
-
 export const sessionStorage = createDatabaseSessionStorage({
   cookie: sessionCookie,
 });
+
+export const getSession = (request: Request) => {
+  const cookie = request.headers.get("Cookie");
+  return sessionStorage.getSession(cookie);
+};
+
+export const getUser = async (request: Request) => {
+  const cookie = request.headers.get("Cookie");
+  const session = await sessionStorage.getSession(cookie);
+  const user = session.get("user");
+  if (!user) {
+    await logout(request);
+    return null;
+  }
+  return user;
+};
 
 export const login = async (request: Request) => {
   const url = new URL(request.url);
@@ -48,8 +60,7 @@ export const login = async (request: Request) => {
 };
 
 export const logout = async (request: Request) => {
-  const cookie = request.headers.get("Cookie");
-  const session = await sessionStorage.getSession(cookie);
+  const session = await getSession(request);
 
   const tenant = process.env.AUTH0_TENANT as string;
   const appSite = process.env.APP_SITE as string;
