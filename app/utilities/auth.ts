@@ -1,7 +1,7 @@
 import { authenticator } from "~/auth0.server";
+import { UserWithClassrooms, getUser } from "~/models/user.server";
 import { getSession } from "~/session.server";
 
-import { UserWithClassrooms, getUser } from "~/models/user.server";
 import { urlParser } from ".";
 
 export const authenticate = async (
