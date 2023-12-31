@@ -40,10 +40,16 @@ export const joinClassroom = async (
     return "You are the moderator of this classroom";
 
   try {
-    return await prisma.studentOnClassroom.create({
+    return await prisma.classroom.update({
+      where: {
+        id: classroomId,
+      },
       data: {
-        classroomId: classroomId,
-        studentId: studentId,
+        StudentOnClassroom: {
+          create: {
+            studentId: studentId,
+          },
+        },
       },
     });
   } catch (e) {
