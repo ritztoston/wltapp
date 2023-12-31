@@ -25,6 +25,7 @@ export const upsertUser = (profile: Auth0Profile) => {
       lastName: profile._json!.family_name!,
       auth0Id: profile.id!,
       image: profile._json!.picture!,
+      createdAt: new Date().toISOString(),
     },
   });
 };

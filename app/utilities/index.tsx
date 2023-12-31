@@ -38,6 +38,10 @@ export const urlParser = (pathname: string): string => {
   return pathname;
 };
 
+export const getUserFullName = (a: string, b: string, separator = " "): string => {
+  return a.concat(separator, b);
+};
+
 export function validationAction<ActionInput>({
   body,
   schema,
