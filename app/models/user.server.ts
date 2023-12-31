@@ -1,5 +1,5 @@
-import type { Password, User } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import type { User } from "@prisma/client";
+import { Auth0Profile } from "remix-auth-auth0";
 
 import { prisma } from "~/db.server";
 
@@ -13,51 +13,18 @@ export async function getUserByEmail(email: User["email"]) {
   return prisma.user.findUnique({ where: { email } });
 }
 
-export async function createUser(email: User["email"], password: string) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  return prisma.user.create({
-    data: {
-      email,
-      password: {
-        create: {
-          hash: hashedPassword,
-        },
-      },
+export const upsertUser = (profile: Auth0Profile) => {
+  return prisma.user.upsert({
+    where: { auth0Id: profile.id },
+    update: {
+      image: profile._json!.picture!,
+    },
+    create: {
+      email: profile._json!.email!,
+      firstName: profile._json!.given_name!,
+      lastName: profile._json!.family_name!,
+      auth0Id: profile.id!,
+      image: profile._json!.picture!,
     },
   });
-}
-
-export async function deleteUserByEmail(email: User["email"]) {
-  return prisma.user.delete({ where: { email } });
-}
-
-export async function verifyLogin(
-  email: User["email"],
-  password: Password["hash"],
-) {
-  const userWithPassword = await prisma.user.findUnique({
-    where: { email },
-    include: {
-      password: true,
-    },
-  });
-
-  if (!userWithPassword || !userWithPassword.password) {
-    return null;
-  }
-
-  const isValid = await bcrypt.compare(
-    password,
-    userWithPassword.password.hash,
-  );
-
-  if (!isValid) {
-    return null;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _password, ...userWithoutPassword } = userWithPassword;
-
-  return userWithoutPassword;
-}
+};

@@ -34,7 +34,6 @@ export const login = async (request: Request) => {
       failureRedirect: "/login",
     });
   } catch (error) {
-    console.log("redirecting to login", error);
     if (error instanceof Response) {
       const returnToCookie = createCookie("returnToCookie", {
         maxAge: 3600,
