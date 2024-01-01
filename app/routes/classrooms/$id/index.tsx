@@ -4,17 +4,19 @@ import {
   MetaFunction,
   json,
 } from "@remix-run/node";
-import { Form, useLoaderData, useSubmit } from "@remix-run/react";
+import { Form, useSubmit } from "@remix-run/react";
 import { useRef } from "react";
 
 import { Sidebar } from "~/components/Classrooms/Classroom/Sidebar";
 import { Content } from "~/components/Content";
 import { Feeds } from "~/components/Feeds";
 import { TextAreaField } from "~/components/Fields/TextAreaField";
+import { emitter } from "~/emitter.server";
 import { getClassroomByName } from "~/models/classroom.server";
 import { createPost } from "~/models/post.server";
 import { capitalize } from "~/utilities";
 import { authenticate } from "~/utilities/auth";
+import { useLiveLoader } from "~/utilities/useLiveLoader";
 
 export const meta: MetaFunction = ({ params }) => {
   const classroomName = params.id;
@@ -22,7 +24,10 @@ export const meta: MetaFunction = ({ params }) => {
   return [{ title: `Classroom | ${capitalize(classroomName)}` }];
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const classroomName = params.id;
+  if (!classroomName) throw json({ error: "No classroom name provided" }, 404);
+
   const user = await authenticate(request);
   const formData = await request.formData();
 
@@ -35,6 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return json({ success: false, error: result });
   }
 
+  emitter.emit(classroomName);
   return json({ success: true, result, error: {} });
 };
 
@@ -50,7 +56,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export default function ClassroomPage() {
-  const { user, classroom } = useLoaderData<typeof loader>();
+  const { user, classroom } = useLiveLoader<typeof loader>();
   const submit = useSubmit();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
