@@ -45,7 +45,6 @@ const navList: Nav[] = [
 // ];
 
 export const Navbar = ({ user }: { user: User }) => {
-  console.log("user", user);
   const [navigation, setNavigation] = useState<Nav[]>(navList);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
