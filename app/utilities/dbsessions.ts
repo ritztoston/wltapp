@@ -37,9 +37,10 @@ export const createDatabaseSessionStorage = <
     async updateData(id, data, expires) {
       const exp = expires ? Math.round(expires.getTime() / 1000) : undefined;
 
-      await prisma.session.update({
+      await prisma.session.upsert({
         where: { id },
-        data: { ttl: exp, data: JSON.stringify(data) },
+        update: { ttl: exp, data: JSON.stringify(data) },
+        create: { id, ttl: exp, data: JSON.stringify(data) },
       });
     },
     async deleteData(id) {
