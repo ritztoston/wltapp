@@ -16,8 +16,11 @@ import { Content } from "~/components/Content";
 import { InputField } from "~/components/Fields/InputField";
 import { InputModal } from "~/components/Modals/InputModal";
 import { createClassroom, getClassrooms } from "~/models/classroom.server";
+import { getNotification, setNotification } from "~/notification.server";
+import { sessionStorage } from "~/session.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
 import { authenticate } from "~/utilities/auth";
+import { Snackbar } from "~/utilities/types";
 
 interface Fields {
   name: string;
@@ -36,38 +39,75 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const name = formData.get("name") as string;
 
-  const result = await createClassroom({
-    name,
-    userId: user.id,
-  });
+  try {
+    const result = await createClassroom({
+      name,
+      userId: user.id,
+    });
 
-  if (!result.id) {
-    return json({ success: false, error: result });
+    const notification: Snackbar = {
+      title: "Successfully saved!",
+      description: `Classroom ${capitalize(name)} has been added.`,
+    };
+    const session = await setNotification(request, notification);
+
+    return json(
+      { success: true, result, error: {} },
+      {
+        headers: {
+          "Set-Cookie": await sessionStorage.commitSession(session),
+        },
+        status: 201,
+      },
+    );
+  } catch (error) {
+    const notification: Snackbar = {
+      title: "Failed to save!",
+      description: `Classroom ${capitalize(name)} already exists.`,
+      type: "error",
+    };
+    const session = await setNotification(request, notification);
+
+    return json(
+      { success: false, error },
+      {
+        headers: {
+          "Set-Cookie": await sessionStorage.commitSession(session),
+        },
+        status: 409,
+      },
+    );
   }
-
-  return json({ success: true, result, error: {} });
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticate(request);
   const classrooms = getClassrooms(user.id);
-  return defer({ user, classrooms });
+  const { session, notification } = await getNotification(request);
+
+  return defer(
+    { user, classrooms, notification },
+    {
+      headers: {
+        "Set-Cookie": await sessionStorage.commitSession(session),
+      },
+    },
+  );
 };
 
 export default function ClassroomsPage() {
-  const { user, classrooms } = useLoaderData<typeof loader>();
+  const { user, classrooms, notification } = useLoaderData<typeof loader>();
   const ref = useRef<HTMLDivElement>(null);
   const fetcher = useFetcher<typeof action>();
   const isSubmitting = fetcher.state === "submitting";
 
-  const [openAdd, setOpenAdd] = useState(false);
-  const [addErrors, setAddErrors] =
-    useState<Partial<Record<keyof Fields, string>>>();
+  const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>();
 
   const handleAddClassroom = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Clear errors on submit
-    setAddErrors({});
+    setErrors({});
 
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
@@ -80,8 +120,10 @@ export default function ClassroomsPage() {
     });
 
     if (action.errors) {
-      return setAddErrors(action.errors);
+      return setErrors(action.errors);
     }
+
+    setOpen(false);
 
     fetcher.submit(formData, {
       method: "post",
@@ -89,30 +131,18 @@ export default function ClassroomsPage() {
   };
 
   const handleCancel = () => {
-    setAddErrors({});
-    setOpenAdd(false);
+    setErrors({});
+    setOpen(false);
   };
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.success) {
-      setOpenAdd(false);
       ref.current?.scrollIntoView({ behavior: "smooth" });
-    }
-
-    if (
-      fetcher.state === "idle" &&
-      !fetcher.data?.success &&
-      fetcher.data?.error
-    ) {
-      setAddErrors((errors) => ({
-        ...errors,
-        ...fetcher.data?.error,
-      }));
     }
   }, [fetcher, isSubmitting]);
 
   return (
-    <Content user={user} title="My Classrooms">
+    <Content notification={notification} user={user} title="My Classrooms">
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4 text-gray-800">
         <Suspense fallback={<ClassroomsSkeleton />}>
           <Await resolve={classrooms}>
@@ -123,7 +153,7 @@ export default function ClassroomsPage() {
                     <button
                       type="button"
                       className="relative group hover:cursor-pointer"
-                      onClick={() => setOpenAdd(true)}
+                      onClick={() => setOpen(true)}
                       disabled={isSubmitting}
                     >
                       <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border-2 border-dashed border-main-blue hover:border-main-blue/50 focus:outline-none focus:ring-0 select-none">
@@ -171,7 +201,7 @@ export default function ClassroomsPage() {
                   <button
                     type="button"
                     className="relative group hover:cursor-pointer sm:col-span-4"
-                    onClick={() => setOpenAdd(true)}
+                    onClick={() => setOpen(true)}
                     disabled={isSubmitting}
                   >
                     <div className="aspect-h-1 aspect-w-6 overflow-hidden rounded-lg border-2 border-dashed border-main-blue hover:border-main-blue/50 focus:outline-none focus:ring-0 select-none">
@@ -197,7 +227,7 @@ export default function ClassroomsPage() {
           </Await>
         </Suspense>
       </div>
-      <InputModal open={openAdd} setOpen={handleCancel}>
+      <InputModal open={open} setOpen={handleCancel}>
         <fetcher.Form method="post" onSubmit={handleAddClassroom}>
           <div className="sm:flex sm:items-start">
             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-800 sm:mx-0 sm:h-10 sm:w-10">
@@ -221,7 +251,7 @@ export default function ClassroomsPage() {
               className="grow"
               name="name"
               placeholder="New classroom name"
-              error={addErrors?.name}
+              error={errors?.name}
               disabled={isSubmitting}
             />
           </div>
