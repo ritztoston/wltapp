@@ -1,5 +1,6 @@
 import { Session } from "@remix-run/node";
-import { commitSession, getSession } from "~/session.server";
+
+import { getSession } from "~/session.server";
 import { Snackbar } from "~/utilities/types";
 
 export const setNotification = async (

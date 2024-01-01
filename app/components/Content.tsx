@@ -2,10 +2,10 @@ import { User } from "@prisma/client";
 import { ReactNode } from "react";
 
 import { classNames } from "~/utilities";
+import { Snackbar } from "~/utilities/types";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Navbar } from "./Navbar";
-import { Snackbar } from "~/utilities/types";
 import Notifications from "./Notifications";
 
 // import { Notification } from "~/utilities/types";

@@ -1,4 +1,5 @@
 import { User } from "@prisma/client";
+
 import { getUserFullName } from "~/utilities";
 
 export const UserCard = ({ user }: { user: User }) => (

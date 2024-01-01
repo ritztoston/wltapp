@@ -34,7 +34,7 @@ export const TimeAgo = ({ date }: { date: string }) => {
     return () => {
       clearInterval(intervalId); // Clear interval on component unmount
     };
-  }, []);
+  }, [date]);
 
   return <span>{`${daysAgo}`}</span>;
 };

@@ -15,7 +15,7 @@ export const TextAreaField = ({
         <img
           className="inline-block h-10 w-10 rounded-full"
           src={user.image}
-          alt="commenter image"
+          alt={user.lastName}
         />
       </div>
       <div className="min-w-0 flex-1">

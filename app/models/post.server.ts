@@ -5,20 +5,16 @@ export const createPost = async (
   classroomId: string,
   userId: string,
 ) => {
-  try {
-    return await prisma.post.create({
-      data: {
-        content: content,
-        createdAt: new Date().toISOString(),
-        authorId: userId,
-        classrooms: {
-          connect: {
-            id: classroomId,
-          },
+  return await prisma.post.create({
+    data: {
+      content: content,
+      createdAt: new Date().toISOString(),
+      authorId: userId,
+      classrooms: {
+        connect: {
+          id: classroomId,
         },
       },
-    });
-  } catch (e) {
-    throw e;
-  }
+    },
+  });
 };

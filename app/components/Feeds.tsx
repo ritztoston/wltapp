@@ -1,8 +1,9 @@
-import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/20/solid";
-import { getUserFullName } from "~/utilities";
-import { ClassroomWithStudents } from "~/models/classroom.server";
-import { TimeAgo } from "./TimeAgo";
 import { useEffect, useRef } from "react";
+
+import { ClassroomWithStudents } from "~/models/classroom.server";
+import { getUserFullName } from "~/utilities";
+
+import { TimeAgo } from "./TimeAgo";
 
 export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -21,7 +22,7 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
 
   return (
     <div className="flow-root mb-8">
-      <ul role="list">
+      <ul>
         {posts.map((post) => (
           <li
             key={post.id}
@@ -43,12 +44,12 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
                       alt=""
                     />
 
-                    <span className="absolute -bottom-0.5 -right-1 rounded-tl bg-gray-900 px-0.5 py-px">
+                    {/* <span className="absolute -bottom-0.5 -right-1 rounded-tl bg-gray-900 px-0.5 py-px">
                       <ChatBubbleLeftEllipsisIcon
                         className="h-4 w-4 text-gray-400"
                         aria-hidden="true"
                       />
-                    </span>
+                    </span> */}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div>
@@ -61,7 +62,7 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
                         </div>
                       </div>
                       <p className="mt-0.5 text-xs text-gray-500">
-                        <TimeAgo date={post.createdAt} />
+                        Posted <TimeAgo date={post.createdAt} />
                       </p>
                     </div>
                     <div className="mt-2 text-sm text-gray-300">
