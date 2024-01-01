@@ -20,11 +20,7 @@ export const upsertUser = (profile: Auth0Profile) => {
       createdAt: new Date().toISOString(),
     },
     include: {
-      StudentOnClassroom: {
-        include: {
-          classroom: true,
-        },
-      },
+      classrooms: true,
     },
   });
 };

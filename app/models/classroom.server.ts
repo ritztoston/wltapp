@@ -7,6 +7,18 @@ interface Create {
   userId: string;
 }
 
+export type ClassroomWithStudents = Prisma.ClassroomGetPayload<{
+  include: {
+    posts: {
+      include: {
+        author: true;
+      };
+    };
+    students: true;
+    owner: true;
+  };
+}>;
+
 export const createClassroom = async ({ name, userId }: Create) => {
   try {
     return await prisma.classroom.create({
@@ -14,17 +26,13 @@ export const createClassroom = async ({ name, userId }: Create) => {
         name: name,
         createdAt: new Date().toISOString(),
         active: true,
-        userId: userId,
+        ownerId: userId,
       },
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        const error: Record<string, string> = {
-          name: "A classroom with this name already exists.",
-        };
-
-        return error;
+        throw new Error("A classroom with this name already exists.");
       }
     }
     throw e;
@@ -45,9 +53,9 @@ export const joinClassroom = async (
         id: classroomId,
       },
       data: {
-        StudentOnClassroom: {
-          create: {
-            studentId: studentId,
+        students: {
+          connect: {
+            id: studentId,
           },
         },
       },
@@ -67,12 +75,12 @@ export const getClassrooms = async (id: string) => {
     where: {
       OR: [
         {
-          userId: id,
+          ownerId: id,
         },
         {
-          StudentOnClassroom: {
+          students: {
             some: {
-              studentId: id,
+              id: id,
             },
           },
         },
@@ -87,12 +95,13 @@ export const getClassroomByName = async (name: string) => {
       name: name,
     },
     include: {
-      StudentOnClassroom: {
+      posts: {
         include: {
-          student: true,
+          author: true,
         },
       },
-      User: true,
+      students: true,
+      owner: true,
     },
   });
 };
