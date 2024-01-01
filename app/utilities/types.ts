@@ -3,7 +3,7 @@ export interface JsonResponse {
   success: boolean;
   field?: Record<string, string>;
 }
-export interface Notification {
+export interface Snackbar {
   title: string;
   description: string;
   type?: "success" | "error" | "warning" | "info";
