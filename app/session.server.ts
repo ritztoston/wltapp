@@ -1,4 +1,4 @@
-import { createCookie, redirect } from "@remix-run/node";
+import { Session, createCookie, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { authenticator } from "~/auth0.server";
@@ -23,6 +23,10 @@ export const sessionStorage = createDatabaseSessionStorage({
 export const getSession = (request: Request) => {
   const cookie = request.headers.get("Cookie");
   return sessionStorage.getSession(cookie);
+};
+
+export const commitSession = async (session: Session) => { 
+  return sessionStorage.commitSession(session);
 };
 
 export const getUser = async (request: Request) => {

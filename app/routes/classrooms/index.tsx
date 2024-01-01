@@ -16,10 +16,10 @@ import { Content } from "~/components/Content";
 import { InputField } from "~/components/Fields/InputField";
 import { InputModal } from "~/components/Modals/InputModal";
 import { createClassroom, getClassrooms } from "~/models/classroom.server";
-import { getNotification, setNotification } from "~/notification.server";
-import { sessionStorage } from "~/session.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
 import { authenticate } from "~/utilities/auth";
+import { getNotification, setNotification } from "~/utilities/notification";
+import { commitSession } from "~/utilities/session";
 import { Snackbar } from "~/utilities/types";
 
 interface Fields {
@@ -55,7 +55,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { success: true, result, error: {} },
       {
         headers: {
-          "Set-Cookie": await sessionStorage.commitSession(session),
+          "Set-Cookie": await commitSession(session),
         },
         status: 201,
       },
@@ -72,7 +72,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { success: false, error },
       {
         headers: {
-          "Set-Cookie": await sessionStorage.commitSession(session),
+          "Set-Cookie": await commitSession(session),
         },
         status: 409,
       },
@@ -89,7 +89,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     { user, classrooms, notification },
     {
       headers: {
-        "Set-Cookie": await sessionStorage.commitSession(session),
+        "Set-Cookie": await commitSession(session),
       },
     },
   );
