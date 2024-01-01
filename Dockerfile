@@ -32,6 +32,9 @@ WORKDIR /myapp
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 
 ADD prisma .
+# RUN npx prisma generate
+RUN npx prisma reset --force
+RUN npx prisma migrate deploy --preview-feature
 RUN npx prisma generate
 
 ADD . .
