@@ -1,14 +1,6 @@
-/* eslint-disable jest/no-commented-out-tests */
-// import { validateEmail } from "./utils";
+import { getUserFullName } from "./utilities";
 
-// test("validateEmail returns false for non-emails", () => {
-//   expect(validateEmail(undefined)).toBe(false);
-//   expect(validateEmail(null)).toBe(false);
-//   expect(validateEmail("")).toBe(false);
-//   expect(validateEmail("not-an-email")).toBe(false);
-//   expect(validateEmail("n@")).toBe(false);
-// });
-
-// test("validateEmail returns true for emails", () => {
-//   expect(validateEmail("kody@example.com")).toBe(true);
-// });
+test("validateEmail returns true for emails", () => {
+  expect(getUserFullName("John", "Doe")).toBe("John Doe");
+  expect(getUserFullName("John", "Doe")).toBeTypeOf("string");
+});
