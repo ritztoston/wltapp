@@ -15,6 +15,7 @@ model User {
   lastName   String
   image      String
   createdAt  String
+  onBoarding Boolean     @default(false)
   classrooms Classroom[] @relation("Students")
   moderated  Classroom[] @relation("Owner")
   posts      Post[]

@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import { ReactNode } from "react";
 
 import { classNames } from "~/utilities";
@@ -8,12 +7,7 @@ import { Breadcrumbs } from "./Breadcrumbs";
 import { Navbar } from "./Navbar";
 import Notifications from "./Notifications";
 
-// import { Notification } from "~/utilities/types";
-
-// import Notifications from "../Notifications/Notifications";
-
 interface LocalProps {
-  user: User;
   children: ReactNode;
   title?: string;
   sidebar?: ReactNode;
@@ -23,7 +17,7 @@ interface LocalProps {
 export const Content = (props: LocalProps) => {
   return (
     <div>
-      <Navbar user={props.user} />
+      <Navbar />
       <main className="lg:pl-72">
         <div className={classNames(props.sidebar ? "xl:pr-64" : "", "")}>
           <Breadcrumbs title={props.title} />

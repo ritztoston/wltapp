@@ -81,7 +81,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session, notification } = await getNotification(request);
 
   return defer(
-    { user, classrooms, notification },
+    { classrooms, notification },
     {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -91,7 +91,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function ClassroomsPage() {
-  const { user, classrooms, notification } = useLoaderData<typeof loader>();
+  const { classrooms, notification } = useLoaderData<typeof loader>();
 
   const ref = useRef<HTMLDivElement>(null);
   const fetcher = useFetcher<typeof action>();
@@ -138,7 +138,7 @@ export default function ClassroomsPage() {
   }, [fetcher, isSubmitting]);
 
   return (
-    <Content notification={notification} user={user} title="My Classrooms">
+    <Content title="My Classrooms" notification={notification}>
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4 text-gray-800">
         <Suspense fallback={<ClassroomsSkeleton />}>
           <Await resolve={classrooms}>

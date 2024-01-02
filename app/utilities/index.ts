@@ -1,3 +1,5 @@
+import { useMatches } from "@remix-run/react";
+import { useMemo } from "react";
 import type { ZodSchema, ZodError } from "zod";
 
 import { ActionErrors } from "./types";
@@ -5,6 +7,17 @@ import { ActionErrors } from "./types";
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
+
+export function useMatchesData(
+  id: string,
+): Record<string, unknown> | undefined {
+  const matchingRoutes = useMatches();
+  const route = useMemo(
+    () => matchingRoutes.find((route) => route.id === id),
+    [matchingRoutes, id],
+  );
+  return route?.data as Record<string, unknown> | undefined;
+}
 
 export const acronymizer = (word: string): string => {
   return word
@@ -38,7 +51,11 @@ export const urlParser = (pathname: string): string => {
   return pathname;
 };
 
-export const getUserFullName = (a: string, b: string, separator = " "): string => {
+export const getUserFullName = (
+  a: string,
+  b: string,
+  separator = " ",
+): string => {
   return a.concat(separator, b);
 };
 

@@ -1,5 +1,4 @@
-import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 
 import { Content } from "~/components/Content";
 import { authenticate } from "~/utilities/auth";
@@ -9,15 +8,11 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await authenticate(request);
-  return json({ user });
+  await authenticate(request);
+
+  return null;
 };
 
 export default function HomePage() {
-  const { user } = useLoaderData<typeof loader>();
-  return (
-    <Content user={user} title="Dashboard">
-      Home
-    </Content>
-  );
+  return <Content title="Dashboard">Home</Content>;
 }

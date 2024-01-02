@@ -16,7 +16,11 @@ const auth0Strategy = new Auth0Strategy(
     domain: process.env.AUTH0_TENANT!,
   },
   async ({ profile }) => {
-    return await upsertUser(profile);
+    let onBoarding = false;
+
+    if (profile._json?.given_name) onBoarding = true;
+
+    return await upsertUser(profile, onBoarding);
   },
 );
 

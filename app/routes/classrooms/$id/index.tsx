@@ -45,18 +45,18 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const user = await authenticate(request);
+  await authenticate(request);
   const classroomName = params.id;
   if (!classroomName) throw json({ error: "No classroom name provided" }, 404);
 
   const classroom = await getClassroomByName(classroomName);
   if (!classroom) throw json({ error: "Classroom not found" }, 404);
 
-  return json({ user, classroom });
+  return json({ classroom });
 };
 
 export default function ClassroomPage() {
-  const { user, classroom } = useLiveLoader<typeof loader>();
+  const { classroom } = useLiveLoader<typeof loader>();
   const submit = useSubmit();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -79,14 +79,10 @@ export default function ClassroomPage() {
   };
 
   return (
-    <Content
-      title={classroom.name}
-      user={user}
-      sidebar={<Sidebar classroom={classroom} />}
-    >
+    <Content title={classroom.name} sidebar={<Sidebar classroom={classroom} />}>
       <Feeds posts={classroom.posts} />
       <Form method="post" onSubmit={handleOnSubmit}>
-        <TextAreaField textAreaRef={textAreaRef} user={user} />
+        <TextAreaField textAreaRef={textAreaRef} />
       </Form>
     </Content>
   );

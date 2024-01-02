@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,10 +8,13 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
+  json,
   useRouteError,
 } from "@remix-run/react";
 
 import stylesheet from "~/tailwind.css";
+
+import { getUserSession } from "./utilities/auth";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -50,6 +53,12 @@ export const links: LinksFunction = () => [
   },
   { rel: "manifest", href: "/site.webmanifest" },
 ];
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await getUserSession(request);
+
+  return json({ user });
+};
 
 export default function App() {
   return (

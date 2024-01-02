@@ -57,7 +57,7 @@ export const InputField = ({
       {label ? (
         <label
           htmlFor={htmlFor ? htmlFor : name}
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-300"
         >
           {label}{" "}
           {optional ? (

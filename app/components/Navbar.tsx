@@ -5,7 +5,6 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { User } from "@prisma/client";
 import { Form, Link, useLocation } from "@remix-run/react";
 import {
   ForwardRefExoticComponent,
@@ -16,6 +15,7 @@ import {
 
 import Logo from "~/assets/classmaster.png";
 import { classNames, getUserFullName } from "~/utilities";
+import { useUser } from "~/utilities/auth";
 
 interface Nav {
   name: string;
@@ -44,7 +44,8 @@ const navList: Nav[] = [
 //   { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
 // ];
 
-export const Navbar = ({ user }: { user: User }) => {
+export const Navbar = () => {
+  const user = useUser();
   const [navigation, setNavigation] = useState<Nav[]>(navList);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();

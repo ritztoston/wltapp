@@ -1,13 +1,13 @@
-import { User } from "@prisma/client";
 import { LegacyRef, useRef } from "react";
+
+import { useUser } from "~/utilities/auth";
 
 export const TextAreaField = ({
   textAreaRef,
-  user,
 }: {
   textAreaRef: LegacyRef<HTMLTextAreaElement>;
-  user: User;
 }) => {
+  const user = useUser();
   const buttonRef = useRef<HTMLButtonElement>(null);
   return (
     <div className="flex items-start space-x-4 bg-gray-900 rounded-lg p-4 shadow-lg">

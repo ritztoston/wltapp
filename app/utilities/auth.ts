@@ -2,10 +2,9 @@ import { User } from "@prisma/client";
 import { Session } from "@remix-run/node";
 
 import { authenticator } from "~/auth0.server";
-import { getUser } from "~/models/user.server";
 import { logout, sessionStorage } from "~/session.server";
 
-import { urlParser } from ".";
+import { urlParser, useMatchesData } from ".";
 
 export const getSession = async (request: Request) => {
   const cookie = request.headers.get("Cookie");
@@ -27,25 +26,40 @@ export const getUserSession = async (request: Request) => {
     await logout(request);
     return null;
   }
-  return user;
+  return user as User;
 };
 
 export const authenticate = async (request: Request): Promise<User> => {
   const session = await getSession(request);
-  let auth = session.get("user") as User | null;
+  const user = session.get("user") as User | null;
 
-  if (!auth) {
-    const path = urlParser(new URL(request.url).pathname);
-    auth = (await authenticator.isAuthenticated(request, {
-      failureRedirect: `/login?redirectTo=${path}`,
-    })) as User;
-  }
-
-  const user = await getUser(auth.id);
   if (!user) {
-    await logout(request);
-    throw new Error("User not found");
+    const path = urlParser(new URL(request.url).pathname);
+    return await authenticator.isAuthenticated(request, {
+      failureRedirect: `/login?redirectTo=${path}`,
+    });
   }
 
   return user;
+};
+
+const isUser = (user: User) => {
+  return user && typeof user === "object" && typeof user.email === "string";
+};
+
+export const useOptionalUser = () => {
+  const data = useMatchesData("root");
+  if (!data || !isUser(data.user as User)) {
+    return undefined;
+  }
+  return data.user;
+};
+
+export const useUser = () => {
+  const maybeUser = useOptionalUser();
+  if (!maybeUser) {
+    throw new Error("No user found in root loader.");
+  }
+
+  return maybeUser as User;
 };

@@ -25,6 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUserSession(request);
 
   if (user) {
+    if (!user.onBoarding) return redirect("/onboarding");
     return redirect("/home");
   }
 
