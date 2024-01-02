@@ -15,8 +15,41 @@ import {
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  { rel: "stylesheet", href: stylesheet },
+  {
+    rel: "android-chrome-192x192",
+    sizes: "192x192",
+    href: "/android-chrome-192x192.png",
+  },
+  {
+    rel: "android-chrome-512x512",
+    sizes: "512x512",
+    href: "/android-chrome-512x512.png",
+  },
+  {
+    rel: "apple-touch-icon",
+    sizes: "180x180",
+    href: "/apple-touch-icon.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "32x32",
+    href: "/favicon-32x32.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "16x16",
+    href: "/favicon-16x16.png",
+  },
+  {
+    rel: "icon",
+    type: "image/x-icon",
+    href: "/favicon.ico",
+  },
+  { rel: "manifest", href: "/site.webmanifest" },
 ];
 
 export default function App() {
