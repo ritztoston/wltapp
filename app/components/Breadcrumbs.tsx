@@ -12,7 +12,7 @@ export const Breadcrumbs = ({ title }: { title?: string }) => {
     <div
       className={classNames(
         pathnames.length ? "visible" : "invisible",
-        "px-4 sm:px-6 lg:px-20 lg:pt-10 py-6 mx-auto max-w-7xl lg:sticky lg:top-0 lg:z-10 bg-gray-800",
+        "px-4 py-8 sm:px-6 lg:px-20 lg:py-10 lg:sticky lg:top-0 lg:z-10 bg-gray-800",
       )}
     >
       <div>
