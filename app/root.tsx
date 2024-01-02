@@ -11,7 +11,6 @@ import {
   useRouteError,
 } from "@remix-run/react";
 
-// import { getSession } from "~/session.server";
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -83,13 +82,16 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <h1>
-          {isRouteErrorResponse(error)
-            ? `${error.status} ${error.statusText}`
-            : error instanceof Error
-            ? error.message
-            : "Unknown Error"}
-        </h1>
+        <div className="text-red-400 bg-gray-800 p-8 h-screen">
+          <h1 className="p-4">
+            Error:{" "}
+            {isRouteErrorResponse(error)
+              ? `${error.status} ${error.statusText}`
+              : error instanceof Error
+              ? error.message
+              : "Unknown Error"}
+          </h1>
+        </div>
         <ScrollRestoration getKey={(location) => location.pathname} />
         <Scripts />
         <LiveReload />

@@ -16,10 +16,9 @@ import { Content } from "~/components/Content";
 import { InputField } from "~/components/Fields/InputField";
 import { InputModal } from "~/components/Modals/InputModal";
 import { createClassroom, getClassrooms } from "~/models/classroom.server";
+import { getNotification, setNotification } from "~/notification.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
-import { authenticate } from "~/utilities/auth";
-import { getNotification, setNotification } from "~/utilities/notification";
-import { commitSession } from "~/utilities/session";
+import { authenticate, commitSession } from "~/utilities/auth";
 import { Snackbar } from "~/utilities/types";
 
 interface Fields {
@@ -38,19 +37,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await authenticate(request);
   const formData = await request.formData();
   const name = formData.get("name") as string;
-
   try {
     const result = await createClassroom({
       name,
       userId: user.id,
     });
-
     const notification: Snackbar = {
       title: "Successfully saved!",
       description: `Classroom ${capitalize(name)} has been added.`,
     };
     const session = await setNotification(request, notification);
-
     return json(
       { success: true, result, error: {} },
       {
@@ -67,7 +63,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       type: "error",
     };
     const session = await setNotification(request, notification);
-
     return json(
       { success: false, error },
       {

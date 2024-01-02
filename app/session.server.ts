@@ -1,9 +1,10 @@
-import { Session, createCookie, redirect } from "@remix-run/node";
+import { createCookie, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { authenticator } from "~/auth0.server";
 
-import { createDatabaseSessionStorage } from "./utilities/dbsessions";
+import { createDatabaseSessionStorage } from "./dbsession.server";
+import { destroySession, getSession } from "./utilities/auth";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -19,26 +20,6 @@ const sessionCookie = createCookie("__session", {
 export const sessionStorage = createDatabaseSessionStorage({
   cookie: sessionCookie,
 });
-
-export const getSession = (request: Request) => {
-  const cookie = request.headers.get("Cookie");
-  return sessionStorage.getSession(cookie);
-};
-
-export const commitSession = async (session: Session) => { 
-  return sessionStorage.commitSession(session);
-};
-
-export const getUser = async (request: Request) => {
-  const cookie = request.headers.get("Cookie");
-  const session = await sessionStorage.getSession(cookie);
-  const user = session.get("user");
-  if (!user) {
-    await logout(request);
-    return null;
-  }
-  return user;
-};
 
 export const login = async (request: Request) => {
   const url = new URL(request.url);
@@ -82,7 +63,7 @@ export const logout = async (request: Request) => {
   try {
     const headers = new Headers();
 
-    headers.append("Set-Cookie", await sessionStorage.destroySession(session));
+    headers.append("Set-Cookie", await destroySession(session));
     headers.append(
       "Set-Cookie",
       await result.serialize("returnToCookie", {
