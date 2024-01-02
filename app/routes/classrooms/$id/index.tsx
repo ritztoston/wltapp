@@ -21,7 +21,7 @@ import { useLiveLoader } from "~/utilities/useLiveLoader";
 export const meta: MetaFunction = ({ params }) => {
   const classroomName = params.id;
   if (!classroomName) return [{ title: "Classroom" }];
-  return [{ title: `Classroom | ${capitalize(classroomName)}` }];
+  return [{ title: `${capitalize(classroomName)} | ClassMaster` }];
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

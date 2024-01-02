@@ -31,7 +31,7 @@ const schema = z.object({
 });
 
 export const meta: MetaFunction = () => {
-  return [{ title: "ClassMaster | Classrooms" }];
+  return [{ title: "Classrooms | ClassMaster" }];
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
