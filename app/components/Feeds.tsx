@@ -10,7 +10,7 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth",
+      // behavior: "smooth",
       block: "start",
       inline: "nearest",
     });

@@ -97,6 +97,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function ClassroomsPage() {
   const { user, classrooms, notification } = useLoaderData<typeof loader>();
+
   const ref = useRef<HTMLDivElement>(null);
   const fetcher = useFetcher<typeof action>();
   const isSubmitting = fetcher.state === "submitting";
