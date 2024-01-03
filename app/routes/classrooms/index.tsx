@@ -138,7 +138,7 @@ export default function ClassroomsPage() {
   }, [fetcher, isSubmitting]);
 
   return (
-    <Content title="My Classrooms" notification={notification}>
+    <Content title="Classrooms" notification={notification}>
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4 text-gray-800">
         <Suspense fallback={<ClassroomsSkeleton />}>
           <Await resolve={classrooms}>

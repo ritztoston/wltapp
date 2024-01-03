@@ -4,7 +4,7 @@ import { Content } from "~/components/Content";
 import { authenticate } from "~/utilities/auth";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "ClassMaster | Home" }];
+  return [{ title: "Home | ClassMaster" }];
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

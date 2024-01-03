@@ -10,22 +10,40 @@
 }
 
 /* width */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 4px;
-}
+} */
 
 /* Track */
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
     background: #1f2937;
-}
+} */
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
     background: #06b6d4;
     border-radius: 12px;
-}
+} */
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
     background: #1d3847;
+} */
+
+/* Custom CSS to hide scrollbar by default */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background-color: #1f2937;
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #1f2937;
+  border-radius: 0.2rem;
+}
+
+.hide-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #06b6d4;
 }

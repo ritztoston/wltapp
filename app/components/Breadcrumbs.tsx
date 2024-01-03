@@ -1,5 +1,4 @@
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "@remix-run/react";
 
 import { capitalize, classNames } from "~/utilities";
@@ -12,24 +11,10 @@ export const Breadcrumbs = ({ title }: { title?: string }) => {
     <div
       className={classNames(
         pathnames.length ? "visible" : "invisible",
-        "px-4 py-8 sm:px-6 lg:px-20 lg:py-10 lg:sticky lg:top-0 lg:z-10 bg-gray-800",
+        "p-2 sm:p-8 md:px-6 lg:px-8 xl:px-24 lg:py-4 xl:py-6 lg:z-10 bg-gray-800 hidden lg:block",
       )}
     >
       <div>
-        {pathnames.length > 1 ? (
-          <nav className="sm:hidden" aria-label="Back">
-            <Link
-              to={"/".concat(pathnames[pathnames.length - 2])}
-              className="flex items-center text-sm font-medium text-gray-400 hover:text-gray-200"
-            >
-              <ChevronLeftIcon
-                className="-ml-1 mr-1 h-5 w-5 flex-shrink-0 text-gray-500"
-                aria-hidden="true"
-              />
-              Back
-            </Link>
-          </nav>
-        ) : null}
         <nav className="hidden sm:flex" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-4">
             <li>

@@ -1,14 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { HomeIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Form, Link, useLocation } from "@remix-run/react";
 import {
+  Dispatch,
   ForwardRefExoticComponent,
   Fragment,
+  SetStateAction,
   useEffect,
   useState,
 } from "react";
@@ -44,10 +41,15 @@ const navList: Nav[] = [
 //   { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
 // ];
 
-export const Navbar = () => {
+export const Navbar = ({
+  sidebarOpen,
+  setSidebarOpen,
+}: {
+  sidebarOpen: boolean;
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const user = useUser();
   const [navigation, setNavigation] = useState<Nav[]>(navList);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -58,6 +60,8 @@ export const Navbar = () => {
       return prev.map((item) => {
         const firstPath = path.split("/")[1];
         const href = item.href.split("/")[1];
+        console.log("firstPath", firstPath);
+        console.log("href", href);
 
         return {
           ...item,
@@ -197,44 +201,41 @@ export const Navbar = () => {
         </Dialog>
       </Transition.Root>
 
-      {/* Static sidebar for desktop */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-800 px-6 shadow-2xl">
-          <div className="flex h-16 shrink-0 items-center">
-            <img className="h-8 w-auto" src={Logo} alt="wltoston" />
-          </div>
-          <nav className="flex flex-1 flex-col">
-            <ul className="flex flex-1 flex-col gap-y-7">
-              <li>
-                <ul className="-mx-2 space-y-2">
-                  {navigation.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        to={item.href}
+      <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-800 px-0 lg:px-6 transition-all ease-in-out duration-300">
+        <div className="flex h-16 shrink-0 items-center">
+          <img className="h-8 w-auto" src={Logo} alt="wltoston" />
+        </div>
+        <nav className="flex flex-1 flex-col">
+          <ul className="flex flex-1 flex-col gap-y-7">
+            <li>
+              <ul className="-mx-2 space-y-2">
+                {navigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      to={item.href}
+                      className={classNames(
+                        item.current
+                          ? "text-main-blue"
+                          : "text-gray-300 hover:text-white hover:bg-main-blue/50",
+                        "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold",
+                      )}
+                    >
+                      <item.icon
                         className={classNames(
                           item.current
                             ? "text-main-blue"
-                            : "text-gray-300 hover:text-white hover:bg-main-blue/50",
-                          "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold",
+                            : "text-gray-400 group-hover:text-white",
+                          "h-6 w-6 shrink-0",
                         )}
-                      >
-                        <item.icon
-                          className={classNames(
-                            item.current
-                              ? "text-main-blue"
-                              : "text-gray-400 group-hover:text-white",
-                            "h-6 w-6 shrink-0",
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              {/* <li>
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {/* <li>
                 <div className="text-xs font-semibold leading-6 text-gray-400">
                   Your classrooms
                 </div>
@@ -266,63 +267,45 @@ export const Navbar = () => {
                   ))}
                 </ul>
               </li> */}
-              <li className="-mx-6 mt-auto">
-                <div className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-300">
-                  <img
-                    className="h-11 w-11 rounded-full"
-                    src={user.image}
-                    alt={getUserFullName(user.firstName, user.lastName)}
-                  />
-                  <div>
-                    <div aria-hidden="true">
-                      {getUserFullName(user.firstName, user.lastName)}
-                    </div>
-                    <div aria-hidden="true">
-                      <Form action="/logout" method="post">
-                        <button className="items-center flex w-full flex-none gap-x-2 text-red-400 hover:text-red-500 font-medium">
-                          <dt className="flex-none">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-4 h-4"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-                              />
-                            </svg>
-                          </dt>
-                          <dd className="text-sm">Sign out</dd>
-                        </button>
-                      </Form>
-                    </div>
+            <li className="-mx-6 mt-auto">
+              <div className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-300">
+                <img
+                  className="h-11 w-11 rounded-full"
+                  src={user.image}
+                  alt={getUserFullName(user.firstName, user.lastName)}
+                />
+                <div>
+                  <div aria-hidden="true">
+                    {getUserFullName(user.firstName, user.lastName)}
+                  </div>
+                  <div aria-hidden="true">
+                    <Form action="/logout" method="post">
+                      <button className="items-center flex w-full flex-none gap-x-2 text-red-400 hover:text-red-500 font-medium">
+                        <dt className="flex-none">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                            />
+                          </svg>
+                        </dt>
+                        <dd className="text-sm">Sign out</dd>
+                      </button>
+                    </Form>
                   </div>
                 </div>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-800 px-4 py-4 sm:px-6 lg:hidden shadow-lg">
-        <button
-          type="button"
-          className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-          onClick={() => setSidebarOpen(true)}
-        >
-          <Bars3Icon className="h-6 w-6 text-white" aria-hidden="true" />
-        </button>
-        <span>
-          <img
-            className="h-8 w-8 rounded-full bg-gray-50"
-            src={user.image}
-            alt={getUserFullName(user.firstName, user.lastName)}
-          />
-        </span>
+              </div>
+            </li>
+          </ul>
+        </nav>
       </div>
     </>
   );
