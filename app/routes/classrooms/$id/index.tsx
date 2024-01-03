@@ -7,9 +7,9 @@ import {
 import { Form, useSubmit } from "@remix-run/react";
 import { useRef } from "react";
 
+import { Feeds } from "~/components/Classrooms/Classroom/Feeds";
 import { Sidebar } from "~/components/Classrooms/Classroom/Sidebar";
 import { Content } from "~/components/Content";
-import { Feeds } from "~/components/Feeds";
 import { TextAreaField } from "~/components/Fields/TextAreaField";
 import { emitter } from "~/emitter.server";
 import { getClassroomByName } from "~/models/classroom.server";

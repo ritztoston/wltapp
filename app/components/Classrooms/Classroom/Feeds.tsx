@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { ClassroomWithStudents } from "~/models/classroom.server";
 import { getUserFullName } from "~/utilities";
 
-import { TimeAgo } from "./TimeAgo";
+import { TimeAgo } from "../../TimeAgo";
 
 export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);

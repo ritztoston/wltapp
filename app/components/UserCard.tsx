@@ -3,9 +3,9 @@ import { User } from "@prisma/client";
 import { getUserFullName } from "~/utilities";
 
 export const UserCard = ({ user }: { user: User }) => (
-  <div className="flex items-center gap-x-4 py-3 text-xs font-semibold text-gray-300">
+  <div className="flex items-center gap-x-4 py-3 text-sm font-semibold text-gray-300">
     <img
-      className="h-8 w-8 rounded-full"
+      className="h-10 w-10 rounded-full"
       src={user.image}
       alt={getUserFullName(user.firstName, user.lastName)}
     />
