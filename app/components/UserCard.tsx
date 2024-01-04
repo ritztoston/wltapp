@@ -1,7 +1,7 @@
-import { UserWithClassrooms } from "~/models/user.server";
+import { User } from "~/models/user.server";
 import { getUserFullName } from "~/utilities";
 
-export const UserCard = ({ user }: { user: UserWithClassrooms }) => (
+export const UserCard = ({ user }: { user: User }) => (
   <div className="flex items-center gap-x-4 py-3 text-sm font-semibold text-gray-300">
     <img
       className="h-10 w-10 rounded-full"
