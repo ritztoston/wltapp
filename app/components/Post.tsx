@@ -1,20 +1,19 @@
 import { Form, useSubmit } from "@remix-run/react";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import { useUser } from "~/utilities/auth";
 
-export const TextAreaField = ({
+import { RichTextAreaField } from "./Fields/RichTextAreaField/RichTextAreaField";
+
+export const PostCard = ({
   state,
 }: {
   state: [boolean, Dispatch<SetStateAction<boolean>>];
 }) => {
   const [, setOpen] = state;
   const user = useUser();
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const submit = useSubmit();
-
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,11 +25,6 @@ export const TextAreaField = ({
 
     // close the dialog
     setOpen(false);
-
-    // clear the content input field
-    if (textAreaRef.current) {
-      textAreaRef.current.value = "";
-    }
 
     submit(formData, { method: "post" });
   };
@@ -49,22 +43,8 @@ export const TextAreaField = ({
       </div>
       <div className="min-w-0 flex-1">
         <div className="relative">
-          <div className="overflow-hidden rounded-lg ring-0 ring-inset ring-gray-300 focus-within:ring-0">
-            <textarea
-              rows={3}
-              name="comment"
-              id="comment"
-              className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-300 placeholder:text-gray-500 focus:ring-0 sm:text-sm sm:leading-6"
-              placeholder="Announce something to your class..."
-              defaultValue={""}
-              ref={textAreaRef}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && !event.shiftKey) {
-                  event.preventDefault();
-                  buttonRef.current?.click();
-                }
-              }}
-            />
+          <div className="overflow-hidden ring-0 ring-inset ring-gray-300 focus-within:ring-0">
+            <RichTextAreaField />
 
             {/* Spacer element to match the height of the toolbar */}
             <div className="py-2" aria-hidden="true">
@@ -80,8 +60,7 @@ export const TextAreaField = ({
             <div className="flex-shrink-0">
               <button
                 type="submit"
-                ref={buttonRef}
-                className="inline-flex items-center rounded-md bg-main-blue px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm hover:bg-main-blue/90"
+                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm hover:text-main-blue/90"
               >
                 Post
               </button>

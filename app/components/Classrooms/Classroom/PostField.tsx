@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Dispatch, Fragment, SetStateAction } from "react";
 
-import { TextAreaField } from "~/components/Fields/TextAreaField";
+import { PostCard } from "~/components/Post";
 
 export const PostField = ({
   state,
@@ -36,7 +36,7 @@ export const PostField = ({
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-              <TextAreaField state={state} />
+              <PostCard state={state} />
             </Dialog.Panel>
           </Transition.Child>
         </div>

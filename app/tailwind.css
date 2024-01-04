@@ -4,33 +4,18 @@
 @tailwind utilities;
 
 @layer base {
-    html {
-        font-family: "Inter", sans-serif;
-    }
+  html {
+    font-family: "Inter", sans-serif;
+  }
+  ul,
+  ol {
+    padding-left: 1rem;
+  }
+  h2 {
+    @apply text-xl;
+  }
 }
 
-/* width */
-/* ::-webkit-scrollbar {
-    width: 4px;
-} */
-
-/* Track */
-/* ::-webkit-scrollbar-track {
-    background: #1f2937;
-} */
-
-/* Handle */
-/* ::-webkit-scrollbar-thumb {
-    background: #06b6d4;
-    border-radius: 12px;
-} */
-
-/* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
-    background: #1d3847;
-} */
-
-/* Custom CSS to hide scrollbar by default */
 .hide-scrollbar::-webkit-scrollbar {
   width: 0.4rem;
 }

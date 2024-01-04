@@ -5,7 +5,10 @@
     "concatinator",
     "dbsession",
     "dbsessions",
+    "lucide",
     "Revalidator",
+    "tailwindcss",
+    "tiptap",
     "wltoston"
   ]
 }

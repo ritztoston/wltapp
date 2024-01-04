@@ -1,3 +1,5 @@
+import parse from "html-react-parser";
+
 import { ClassroomWithStudents } from "~/models/classroom.server";
 import { getUserFullName } from "~/utilities";
 
@@ -49,7 +51,7 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
                     </p>
                   </div>
                   <div className="mt-2 text-sm text-gray-300">
-                    <p>{post.content}</p>
+                    {parse(post.content)}
                   </div>
                 </div>
               </>
