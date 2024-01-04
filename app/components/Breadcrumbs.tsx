@@ -1,7 +1,7 @@
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
 import { Link, useLocation } from "@remix-run/react";
 
-import { capitalize, classNames } from "~/utilities";
+import { DEFAULT_AUTH_HOME, capitalize, classNames } from "~/utilities";
 
 export const Breadcrumbs = ({ title }: { title?: string }) => {
   const location = useLocation();
@@ -20,7 +20,7 @@ export const Breadcrumbs = ({ title }: { title?: string }) => {
             <li>
               <div className="flex items-center">
                 <Link
-                  to="/home"
+                  to={DEFAULT_AUTH_HOME}
                   className="text-sm font-medium text-gray-400 hover:text-gray-200"
                   aria-current="page"
                 >

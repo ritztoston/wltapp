@@ -20,23 +20,14 @@ export type ClassroomWithStudents = Prisma.ClassroomGetPayload<{
 }>;
 
 export const createClassroom = async ({ name, userId }: Create) => {
-  try {
-    return await prisma.classroom.create({
-      data: {
-        name: name,
-        createdAt: new Date().toISOString(),
-        active: true,
-        ownerId: userId,
-      },
-    });
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === "P2002") {
-        throw new Error("A classroom with this name already exists.");
-      }
-    }
-    throw e;
-  }
+  return await prisma.classroom.create({
+    data: {
+      name: name,
+      createdAt: new Date().toISOString(),
+      active: true,
+      ownerId: userId,
+    },
+  });
 };
 
 export const joinClassroom = async (
@@ -89,10 +80,10 @@ export const getClassrooms = async (id: string) => {
   });
 };
 
-export const getClassroomByName = async (name: string) => {
+export const getClassroom = async (id: string) => {
   return prisma.classroom.findUnique({
     where: {
-      name: name,
+      id: id,
     },
     include: {
       posts: {

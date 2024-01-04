@@ -6,7 +6,7 @@ import * as z from "zod";
 
 import { InputField } from "~/components/Fields/InputField";
 import { User, updateUser } from "~/models/user.server";
-import { validationAction } from "~/utilities";
+import { DEFAULT_AUTH_HOME, validationAction } from "~/utilities";
 import {
   authenticate,
   commitSession,
@@ -43,7 +43,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
 
   session.set("user", updatedUser);
 
-  return redirect("/home", {
+  return redirect(DEFAULT_AUTH_HOME, {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
@@ -55,7 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   if (!user.onBoarding) return null;
 
-  return redirect("/home");
+  return redirect(DEFAULT_AUTH_HOME);
 };
 
 export default function OnBoarding() {

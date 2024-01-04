@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import { Snackbar } from "~/utilities/types";
 
 import { Breadcrumbs } from "./Breadcrumbs";
-import { Navbar } from "./Navbar";
+import { Navbar } from "./Navbar/Navbar";
 import Notifications from "./Notifications";
 
 interface LocalProps {
@@ -20,7 +20,7 @@ export const Content = (props: LocalProps) => {
   return (
     <>
       <div className="flex">
-        <div className="w-0 lg:w-64 xl:w-80 flex-none shadow-2xl flex z-20 transition-all ease-in-out duration-300">
+        <div className="w-0 lg:w-64 xl:w-80 flex-none shadow-2xl flex flex-col min-h-screen h-screen z-20 transition-all ease-in-out duration-300">
           <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         </div>
         <div className="flex-1 flex flex-col min-h-screen h-screen">

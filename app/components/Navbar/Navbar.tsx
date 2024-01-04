@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { HomeIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Form, Link, useLocation } from "@remix-run/react";
+import { UsersIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Link, useLocation } from "@remix-run/react";
 import {
   Dispatch,
   ForwardRefExoticComponent,
@@ -11,8 +11,11 @@ import {
 } from "react";
 
 import Logo from "~/assets/classmaster.png";
-import { classNames, getUserFullName } from "~/utilities";
+import { classNames } from "~/utilities";
 import { useUser } from "~/utilities/auth";
+
+import { ClassroomNavbar } from "./ClassroomNavbar";
+import { UserLogoutCard } from "./UserLogoutCard";
 
 interface Nav {
   name: string;
@@ -27,19 +30,14 @@ interface Nav {
 }
 
 const navList: Nav[] = [
-  { name: "Home", href: "/home", icon: HomeIcon, current: false },
+  // { name: "Home", href: "/home", icon: HomeIcon, current: false },
   {
-    name: "Classrooms",
+    name: "Home",
     href: "/classrooms",
     icon: UsersIcon,
     current: false,
   },
 ];
-
-// const teams = [
-//   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-//   { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-// ];
 
 export const Navbar = ({
   sidebarOpen,
@@ -160,38 +158,12 @@ export const Navbar = ({
                           ))}
                         </ul>
                       </li>
-                      {/* <li>
-                        <div className="text-xs font-semibold leading-6 text-gray-400">
-                          Your teams
-                        </div>
-                        <ul className="-mx-2 mt-2 space-y-1">
-                          {teams.map((team) => (
-                            <li key={team.name}>
-                              <a
-                                href={team.href}
-                                className={classNames(
-                                  team.current
-                                    ? "bg-gray-50 text-indigo-600"
-                                    : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                                )}
-                              >
-                                <span
-                                  className={classNames(
-                                    team.current
-                                      ? "text-indigo-600 border-indigo-600"
-                                      : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
-                                  )}
-                                >
-                                  {team.initial}
-                                </span>
-                                <span className="truncate">{team.name}</span>
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </li> */}
+                      <li>
+                        <ClassroomNavbar classrooms={user.moderated} />
+                      </li>
+                      <li className="-mx-6 mt-auto">
+                        <UserLogoutCard user={user} />
+                      </li>
                     </ul>
                   </nav>
                 </div>
@@ -235,74 +207,11 @@ export const Navbar = ({
                 ))}
               </ul>
             </li>
-            {/* <li>
-                <div className="text-xs font-semibold leading-6 text-gray-400">
-                  Your classrooms
-                </div>
-                <ul className="-mx-2 mt-2 space-y-1">
-                  {teams.map((team) => (
-                    <li key={team.name}>
-                      <a
-                        href={team.href}
-                        className={classNames(
-                          team.current
-                            ? "bg-gray-50 text-indigo-600"
-                            : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                        )}
-                      >
-                        <span
-                          className={classNames(
-                            team.current
-                              ? "text-indigo-600 border-indigo-600"
-                              : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                            "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
-                          )}
-                        >
-                          {team.initial}
-                        </span>
-                        <span className="truncate">{team.name}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li> */}
+            <li>
+              <ClassroomNavbar classrooms={user.moderated} />
+            </li>
             <li className="-mx-6 mt-auto">
-              <div className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-300">
-                <img
-                  className="h-11 w-11 rounded-full"
-                  src={user.image}
-                  alt={getUserFullName(user.firstName, user.lastName)}
-                />
-                <div>
-                  <div aria-hidden="true">
-                    {getUserFullName(user.firstName, user.lastName)}
-                  </div>
-                  <div aria-hidden="true">
-                    <Form action="/logout" method="post">
-                      <button className="items-center flex w-full flex-none gap-x-2 text-red-400 hover:text-red-500 font-medium">
-                        <dt className="flex-none">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-                            />
-                          </svg>
-                        </dt>
-                        <dd className="text-sm">Sign out</dd>
-                      </button>
-                    </Form>
-                  </div>
-                </div>
-              </div>
+              <UserLogoutCard user={user} />
             </li>
           </ul>
         </nav>

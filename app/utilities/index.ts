@@ -4,6 +4,8 @@ import type { ZodSchema, ZodError } from "zod";
 
 import { ActionErrors } from "./types";
 
+export const DEFAULT_AUTH_HOME = "/classrooms";
+
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
@@ -57,6 +59,10 @@ export const getUserFullName = (
   separator = " ",
 ): string => {
   return a.concat(separator, b);
+};
+
+export const getInitials = (word: string): string => {
+  return word.charAt(0);
 };
 
 export function validationAction<ActionInput>({

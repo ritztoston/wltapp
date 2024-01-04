@@ -2,6 +2,7 @@ import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
 import Logo from "~/assets/classmaster.png";
+import { DEFAULT_AUTH_HOME } from "~/utilities";
 import { getUserSession } from "~/utilities/auth";
 
 const contentDescription =
@@ -26,7 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (user) {
     if (!user.onBoarding) return redirect("/onboarding");
-    return redirect("/home");
+    return redirect(DEFAULT_AUTH_HOME);
   }
 
   return null;

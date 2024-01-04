@@ -1,8 +1,7 @@
-import { User } from "@prisma/client";
-
+import { UserWithClassrooms } from "~/models/user.server";
 import { getUserFullName } from "~/utilities";
 
-export const UserCard = ({ user }: { user: User }) => (
+export const UserCard = ({ user }: { user: UserWithClassrooms }) => (
   <div className="flex items-center gap-x-4 py-3 text-sm font-semibold text-gray-300">
     <img
       className="h-10 w-10 rounded-full"
@@ -13,7 +12,9 @@ export const UserCard = ({ user }: { user: User }) => (
       <div aria-hidden="true" className="flex">
         {getUserFullName(user.firstName, user.lastName)}
       </div>
-      <div aria-hidden="true" className="flex">{user.email}</div>
+      <div aria-hidden="true" className="flex">
+        {user.email}
+      </div>
     </div>
   </div>
 );

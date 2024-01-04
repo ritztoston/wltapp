@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { Session } from "@remix-run/node";
 
 import { authenticator } from "~/auth0.server";
+import { UserWithClassrooms } from "~/models/user.server";
 import { logout, sessionStorage } from "~/session.server";
 
 import { urlParser, useMatchesData } from ".";
@@ -29,9 +30,9 @@ export const getUserSession = async (request: Request) => {
   return user as User;
 };
 
-export const authenticate = async (request: Request): Promise<User> => {
+export const authenticate = async (request: Request): Promise<UserWithClassrooms> => {
   const session = await getSession(request);
-  const user = session.get("user") as User | null;
+  const user = session.get("user") as UserWithClassrooms | null;
 
   if (!user) {
     const path = urlParser(new URL(request.url).pathname);
@@ -43,13 +44,13 @@ export const authenticate = async (request: Request): Promise<User> => {
   return user;
 };
 
-const isUser = (user: User) => {
+const isUser = (user: UserWithClassrooms) => {
   return user && typeof user === "object" && typeof user.email === "string";
 };
 
 export const useOptionalUser = () => {
   const data = useMatchesData("root");
-  if (!data || !isUser(data.user as User)) {
+  if (!data || !isUser(data.user as UserWithClassrooms)) {
     return undefined;
   }
   return data.user;
@@ -61,5 +62,5 @@ export const useUser = () => {
     throw new Error("No user found in root loader.");
   }
 
-  return maybeUser as User;
+  return maybeUser as UserWithClassrooms;
 };

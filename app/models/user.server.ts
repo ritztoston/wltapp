@@ -1,8 +1,15 @@
+import { Prisma } from "@prisma/client";
 import { Auth0Profile } from "remix-auth-auth0";
 
 import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
+
+export type UserWithClassrooms = Prisma.UserGetPayload<{
+  include: {
+    moderated: true;
+  };
+}>;
 
 export const upsertUser = (profile: Auth0Profile, onBoarding: boolean) => {
   return prisma.user.upsert({
@@ -20,7 +27,15 @@ export const upsertUser = (profile: Auth0Profile, onBoarding: boolean) => {
       onBoarding: onBoarding,
     },
     include: {
-      classrooms: true,
+      moderated: {
+        take: 5,
+        where: {
+          active: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 };

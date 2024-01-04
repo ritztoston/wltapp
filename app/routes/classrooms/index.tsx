@@ -30,13 +30,15 @@ const schema = z.object({
 });
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Classrooms | ClassMaster" }];
+  return [{ title: "Home | ClassMaster" }];
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await authenticate(request);
+
   const formData = await request.formData();
   const name = formData.get("name") as string;
+
   try {
     const result = await createClassroom({
       name,
@@ -47,6 +49,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       description: `Classroom ${capitalize(name)} has been added.`,
     };
     const session = await setNotification(request, notification);
+
+    session.set("user", {
+      ...user,
+      moderated: [result, ...user.moderated],
+    });
+
     return json(
       { success: true, result, error: {} },
       {
@@ -172,7 +180,7 @@ export default function ClassroomsPage() {
                     {classrooms.map((classroom, index) => (
                       <Link
                         key={classroom.id}
-                        to={classroom.name}
+                        to={classroom.id}
                         className="hover:cursor-pointer"
                       >
                         <div

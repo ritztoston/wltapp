@@ -12,26 +12,31 @@ import { Sidebar } from "~/components/Classrooms/Classroom/Sidebar";
 import { Content } from "~/components/Content";
 import { TextAreaField } from "~/components/Fields/TextAreaField";
 import { emitter } from "~/emitter.server";
-import { getClassroomByName } from "~/models/classroom.server";
+import { getClassroom } from "~/models/classroom.server";
 import { createPost } from "~/models/post.server";
 import { capitalize } from "~/utilities";
 import { authenticate } from "~/utilities/auth";
 import { useLiveLoader } from "~/utilities/useLiveLoader";
 
-export const meta: MetaFunction = ({ params }) => {
-  const classroomName = params.id;
-  if (!classroomName) return [{ title: "Classroom" }];
-  return [{ title: `${capitalize(classroomName)} | ClassMaster` }];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const classroom = data?.classroom;
+
+  return [
+    {
+      title: `${
+        classroom ? capitalize(classroom.name).concat(" | ") : ""
+      }`.concat("ClassMaster"),
+    },
+  ];
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const classroomName = params.id;
-  if (!classroomName) throw json({ error: "No classroom name provided" }, 404);
+  const id = params.id;
+  if (!id) throw json({ error: "No classroom name provided" }, 404);
 
   const user = await authenticate(request);
   const formData = await request.formData();
 
-  const id = formData.get("id") as string;
   const comment = formData.get("comment") as string;
 
   const result = await createPost(comment, id, user.id);
@@ -40,16 +45,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return json({ success: false, error: result });
   }
 
-  emitter.emit(classroomName);
+  emitter.emit(id);
   return json({ success: true, result, error: {} });
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   await authenticate(request);
-  const classroomName = params.id;
-  if (!classroomName) throw json({ error: "No classroom name provided" }, 404);
+  const id = params.id;
+  if (!id) throw json({ error: "No classroom name provided" }, 404);
 
-  const classroom = await getClassroomByName(classroomName);
+  const classroom = await getClassroom(id);
   if (!classroom) throw json({ error: "Classroom not found" }, 404);
 
   return json({ classroom });
@@ -74,7 +79,6 @@ export default function ClassroomPage() {
       textAreaRef.current.value = "";
     }
 
-    formData.set("id", classroom.id);
     submit(formData, { method: "post" });
   };
 
