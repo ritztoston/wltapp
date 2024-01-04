@@ -5,6 +5,8 @@ export interface JsonResponse {
 }
 export interface Snackbar {
   title: string;
-  description: string;
+  description?: string;
   type?: "success" | "error" | "warning" | "info";
+  key?: string;
+  close?: boolean;
 }

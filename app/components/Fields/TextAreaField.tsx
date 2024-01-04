@@ -1,16 +1,45 @@
-import { LegacyRef, useRef } from "react";
+import { Form, useSubmit } from "@remix-run/react";
+import { Dispatch, SetStateAction, useRef } from "react";
 
 import { useUser } from "~/utilities/auth";
 
 export const TextAreaField = ({
-  textAreaRef,
+  state,
 }: {
-  textAreaRef: LegacyRef<HTMLTextAreaElement>;
+  state: [boolean, Dispatch<SetStateAction<boolean>>];
 }) => {
+  const [, setOpen] = state;
   const user = useUser();
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const submit = useSubmit();
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const comment = formData.get("comment") as string;
+
+    // do nothing if the comment is empty
+    if (!comment) return;
+
+    // close the dialog
+    setOpen(false);
+
+    // clear the content input field
+    if (textAreaRef.current) {
+      textAreaRef.current.value = "";
+    }
+
+    submit(formData, { method: "post" });
+  };
+
   return (
-    <div className="flex items-start space-x-4 bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700">
+    <Form
+      className="flex items-start space-x-4 bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700"
+      onSubmit={handleOnSubmit}
+    >
       <div className="flex-shrink-0">
         <img
           className="inline-block h-8 w-8 rounded-full"
@@ -60,6 +89,6 @@ export const TextAreaField = ({
           </div>
         </div>
       </div>
-    </div>
+    </Form>
   );
 };

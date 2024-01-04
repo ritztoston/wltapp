@@ -11,17 +11,27 @@ export default function Notifications({
   type = "success",
   delay = 5,
   close = false,
+  key,
 }: {
   title: Snackbar["title"];
-  description: Snackbar["description"];
+  description?: Snackbar["description"];
   type?: Snackbar["type"];
   delay?: number;
   close?: boolean;
+  key?: string;
 }) {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShow(false), delay * 1000);
+    if (title || key) {
+      setShow(true);
+    }
+  }, [key, title]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShow(false);
+    }, delay * 1000);
     return () => clearTimeout(timer);
   }, [delay]);
 

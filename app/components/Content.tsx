@@ -41,7 +41,8 @@ export const Content = (props: LocalProps) => {
                 </div>
                 <TitleBar title={props.title} />
 
-                <div className="hide-scrollbar p-2 sm:p-8 md:px-6 lg:px-8 xl:px-64 lg:py-4 xl:py-10 overflow-y-auto">
+                <div className="hide-scrollbar p-6 xl:px-24 2xl:px-40 lg:py-4 xl:py-10 overflow-y-auto">
+                {/* <div className="hide-scrollbar py-6 xl:py-10 w-11/12 2xl:w-8/12 mx-auto overflow-y-auto"> */}
                   {props.children}
                 </div>
               </div>
@@ -59,6 +60,8 @@ export const Content = (props: LocalProps) => {
           title={props.notification.title}
           description={props.notification.description}
           type={props.notification.type}
+          key={props.notification.key}
+          close={props.notification.close}
         />
       ) : null}
     </>
