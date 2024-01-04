@@ -3,9 +3,9 @@ import { ReactNode, useState } from "react";
 
 import { Snackbar } from "~/utilities/types";
 
-import { Breadcrumbs } from "./Breadcrumbs";
 import { Navbar } from "./Navbar/Navbar";
 import Notifications from "./Notifications";
+import { TitleBar } from "./TitleBar";
 
 interface LocalProps {
   children: ReactNode;
@@ -39,7 +39,7 @@ export const Content = (props: LocalProps) => {
                     />
                   </button>
                 </div>
-                <Breadcrumbs title={props.title} />
+                <TitleBar title={props.title} />
 
                 <div className="hide-scrollbar p-2 sm:p-8 md:px-6 lg:px-8 xl:px-24 lg:py-4 xl:py-10 overflow-y-auto">
                   {props.children}

@@ -1,9 +1,8 @@
-import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid";
-import { Link, useLocation } from "@remix-run/react";
+import { useLocation } from "@remix-run/react";
 
-import { DEFAULT_AUTH_HOME, capitalize, classNames } from "~/utilities";
+import { classNames } from "~/utilities";
 
-export const Breadcrumbs = ({ title }: { title?: string }) => {
+export const TitleBar = ({ title }: { title?: string }) => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
 
@@ -14,7 +13,7 @@ export const Breadcrumbs = ({ title }: { title?: string }) => {
         "p-2 sm:p-8 md:px-6 lg:px-8 xl:px-24 lg:py-4 xl:py-6 lg:z-10 bg-gray-800 hidden lg:block",
       )}
     >
-      <div>
+      {/* <div>
         <nav className="hidden sm:flex" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-4">
             <li>
@@ -52,7 +51,7 @@ export const Breadcrumbs = ({ title }: { title?: string }) => {
             ))}
           </ol>
         </nav>
-      </div>
+      </div> */}
       <div className="mt-2 md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           {title ? (
