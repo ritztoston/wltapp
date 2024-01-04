@@ -53,6 +53,23 @@ export const urlParser = (pathname: string): string => {
   return pathname;
 };
 
+export const delay = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+export const generateRandomCode = (length = 5) => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(randomIndex);
+  }
+
+  return code;
+};
+
+
 export const getUserFullName = (
   a: string,
   b: string,

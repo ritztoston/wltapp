@@ -21,10 +21,6 @@ export default function Notifications({
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    if (title && description) setShow(true);
-  }, [description, title]);
-
-  useEffect(() => {
     const timer = setTimeout(() => setShow(false), delay * 1000);
     return () => clearTimeout(timer);
   }, [delay]);

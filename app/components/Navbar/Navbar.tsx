@@ -58,9 +58,6 @@ export const Navbar = ({
       return prev.map((item) => {
         const firstPath = path.split("/")[1];
         const href = item.href.split("/")[1];
-        console.log("firstPath", firstPath);
-        console.log("href", href);
-
         return {
           ...item,
           current: href === firstPath,
@@ -158,9 +155,11 @@ export const Navbar = ({
                           ))}
                         </ul>
                       </li>
-                      <li>
-                        <ClassroomNavbar classrooms={user.moderated} />
-                      </li>
+                      {user.moderated.length ? (
+                        <li>
+                          <ClassroomNavbar classrooms={user.moderated} />
+                        </li>
+                      ) : null}
                       <li className="-mx-6 mt-auto">
                         <UserLogoutCard user={user} />
                       </li>
@@ -207,9 +206,11 @@ export const Navbar = ({
                 ))}
               </ul>
             </li>
-            <li>
-              <ClassroomNavbar classrooms={user.moderated} />
-            </li>
+            {user.moderated.length ? (
+              <li>
+                <ClassroomNavbar classrooms={user.moderated} />
+              </li>
+            ) : null}
             <li className="-mx-6 mt-auto">
               <UserLogoutCard user={user} />
             </li>

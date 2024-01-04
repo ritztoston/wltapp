@@ -22,14 +22,16 @@ model User {
 }
 
 model Classroom {
-  id        String  @id @default(cuid())
-  name      String
-  active    Boolean @default(true)
-  createdAt String
-  ownerId   String
-  owner     User    @relation("Owner", fields: [ownerId], references: [id])
-  students  User[]  @relation("Students")
-  posts     Post[]
+  id            String  @id @default(cuid())
+  name          String
+  active        Boolean @default(true)
+  disableInvite Boolean @default(false)
+  code          String  @unique
+  createdAt     String
+  ownerId       String
+  owner         User    @relation("Owner", fields: [ownerId], references: [id])
+  students      User[]  @relation("Students")
+  posts         Post[]
 }
 
 model Post {

@@ -10,10 +10,10 @@ export const TextAreaField = ({
   const user = useUser();
   const buttonRef = useRef<HTMLButtonElement>(null);
   return (
-    <div className="flex items-start space-x-4 bg-gray-900 rounded-lg p-4 shadow-lg">
+    <div className="flex items-start space-x-4 bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700">
       <div className="flex-shrink-0">
         <img
-          className="inline-block h-10 w-10 rounded-full"
+          className="inline-block h-8 w-8 rounded-full"
           src={user.image}
           alt={user.lastName}
         />
@@ -26,7 +26,7 @@ export const TextAreaField = ({
               name="comment"
               id="comment"
               className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-300 placeholder:text-gray-500 focus:ring-0 sm:text-sm sm:leading-6"
-              placeholder="Add your comment..."
+              placeholder="Announce something to your class..."
               defaultValue={""}
               ref={textAreaRef}
               onKeyDown={(event) => {

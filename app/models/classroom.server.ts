@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 import { prisma } from "~/db.server";
+import { generateRandomCode } from "~/utilities";
 
 interface Create {
   name: string;
@@ -24,8 +25,8 @@ export const createClassroom = async ({ name, userId }: Create) => {
     data: {
       name: name,
       createdAt: new Date().toISOString(),
-      active: true,
       ownerId: userId,
+      code: generateRandomCode(6),
     },
   });
 };
@@ -76,6 +77,9 @@ export const getClassrooms = async (id: string) => {
           },
         },
       ],
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };

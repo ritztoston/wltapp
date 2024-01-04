@@ -5,10 +5,17 @@ import {
   LoaderFunctionArgs,
   MetaFunction,
   defer,
-  json,
+  redirect,
 } from "@remix-run/node";
-import { Await, Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { useState, FormEvent, useEffect, Suspense, useRef } from "react";
+import {
+  Await,
+  Form,
+  Link,
+  useLoaderData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
+import { useState, FormEvent, Suspense, useRef } from "react";
 import * as z from "zod";
 
 import { ClassroomsSkeleton } from "~/components/Classrooms/ClassroomsSkeleton";
@@ -16,10 +23,8 @@ import { Content } from "~/components/Content";
 import { InputField } from "~/components/Fields/InputField";
 import { InputModal } from "~/components/Modals/InputModal";
 import { createClassroom, getClassrooms } from "~/models/classroom.server";
-import { getNotification, setNotification } from "~/notification.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
-import { authenticate, commitSession } from "~/utilities/auth";
-import { Snackbar } from "~/utilities/types";
+import { authenticate, commitSession, getSession } from "~/utilities/auth";
 
 interface Fields {
   name: string;
@@ -34,76 +39,44 @@ export const meta: MetaFunction = () => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await authenticate(request);
+  const [user, session, formData] = await Promise.all([
+    authenticate(request),
+    getSession(request),
+    request.formData(),
+  ]);
 
-  const formData = await request.formData();
   const name = formData.get("name") as string;
 
-  try {
-    const result = await createClassroom({
-      name,
-      userId: user.id,
-    });
-    const notification: Snackbar = {
-      title: "Successfully saved!",
-      description: `Classroom ${capitalize(name)} has been added.`,
-    };
-    const session = await setNotification(request, notification);
+  const result = await createClassroom({
+    name,
+    userId: user.id,
+  });
 
-    session.set("user", {
-      ...user,
-      moderated: [result, ...user.moderated],
-    });
+  session.set("user", {
+    ...user,
+    moderated: [result, ...user.moderated.filter((_, index) => !(index >= 4))],
+  });
 
-    return json(
-      { success: true, result, error: {} },
-      {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-        status: 201,
-      },
-    );
-  } catch (error) {
-    const notification: Snackbar = {
-      title: "Failed to save!",
-      description: `Classroom ${capitalize(name)} already exists.`,
-      type: "error",
-    };
-    const session = await setNotification(request, notification);
-    return json(
-      { success: false, error },
-      {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-        status: 409,
-      },
-    );
-  }
+  return redirect("/classrooms/".concat(result.id), {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticate(request);
   const classrooms = getClassrooms(user.id);
-  const { session, notification } = await getNotification(request);
-
-  return defer(
-    { classrooms, notification },
-    {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    },
-  );
+  return defer({ classrooms });
 };
 
 export default function ClassroomsPage() {
-  const { classrooms, notification } = useLoaderData<typeof loader>();
+  const { classrooms } = useLoaderData<typeof loader>();
 
   const ref = useRef<HTMLDivElement>(null);
-  const fetcher = useFetcher<typeof action>();
-  const isSubmitting = fetcher.state === "submitting";
+  const submit = useSubmit();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>();
@@ -129,7 +102,7 @@ export default function ClassroomsPage() {
 
     setOpen(false);
 
-    fetcher.submit(formData, {
+    submit(formData, {
       method: "post",
     });
   };
@@ -139,14 +112,8 @@ export default function ClassroomsPage() {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data?.success) {
-      ref.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [fetcher, isSubmitting]);
-
   return (
-    <Content title="Classrooms" notification={notification}>
+    <Content title="Classrooms">
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4 text-gray-800">
         <Suspense fallback={<ClassroomsSkeleton />}>
           <Await resolve={classrooms}>
@@ -232,7 +199,7 @@ export default function ClassroomsPage() {
         </Suspense>
       </div>
       <InputModal open={open} setOpen={handleCancel}>
-        <fetcher.Form method="post" onSubmit={handleAddClassroom}>
+        <Form method="post" onSubmit={handleAddClassroom}>
           <div className="sm:flex sm:items-start">
             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-800 sm:mx-0 sm:h-10 sm:w-10">
               <UserGroupIcon className="h-8 w-18 text-gray-300" />
@@ -296,7 +263,7 @@ export default function ClassroomsPage() {
               </button>
             ) : null}
           </div>
-        </fetcher.Form>
+        </Form>
       </InputModal>
     </Content>
   );

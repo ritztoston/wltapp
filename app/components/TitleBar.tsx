@@ -10,7 +10,7 @@ export const TitleBar = ({ title }: { title?: string }) => {
     <div
       className={classNames(
         pathnames.length ? "visible" : "invisible",
-        "p-2 sm:p-8 md:px-6 lg:px-8 xl:px-24 lg:py-4 xl:py-6 lg:z-10 bg-gray-800 hidden lg:block",
+        "p-2 sm:p-8 md:px-6 lg:px-8 xl:px-24 lg:py-4 xl:py-2 lg:z-10 bg-gray-800 hidden lg:block shadow-sm",
       )}
     >
       {/* <div>
@@ -55,7 +55,7 @@ export const TitleBar = ({ title }: { title?: string }) => {
       <div className="mt-2 md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           {title ? (
-            <h2 className="text-main-blue font-extrabold text-2xl md:text-4xl leading-7 sm:truncate sm:text-3xl sm:tracking-tight">
+            <h2 className="text-main-blue font-extrabold text-2xl md:text-4xl sm:truncate sm:text-3xl sm:tracking-tight">
               {title}
             </h2>
           ) : null}
