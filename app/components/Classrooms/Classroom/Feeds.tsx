@@ -50,7 +50,7 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
                       Posted <TimeAgo date={post.createdAt} />
                     </p>
                   </div>
-                  <div className="mt-2 text-sm text-gray-300">
+                  <div className="prose mt-2 text-sm text-gray-300">
                     {parse(post.content)}
                   </div>
                 </div>
