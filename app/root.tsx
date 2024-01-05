@@ -11,9 +11,11 @@ import {
   json,
   useRouteError,
 } from "@remix-run/react";
+import { ReactNode } from "react";
 
 import stylesheet from "~/tailwind.css";
 
+import { NotFound } from "./components/NotFound";
 import { getUserSession } from "./utilities/auth";
 
 export const links: LinksFunction = () => [
@@ -80,31 +82,54 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary() {
-  const error = useRouteError();
-
+const ErrorBoundaryProvider = ({
+  title = "Oops!",
+  children,
+}: {
+  title?: string;
+  children: ReactNode;
+}) => {
   return (
     <html lang="en" className="h-full">
       <head>
-        <title>Oops!</title>
+        <title>{title}</title>
         <Meta />
         <Links />
       </head>
-      <body>
-        <div className="text-red-400 bg-gray-800 p-8 h-screen">
-          <h1 className="p-4">
-            Error:{" "}
-            {isRouteErrorResponse(error)
-              ? `${error.status} ${error.statusText}`
-              : error instanceof Error
-              ? error.message
-              : "Unknown Error"}
-          </h1>
-        </div>
+      <body className="h-full bg-gray-800">
+        {children}
         <ScrollRestoration getKey={(location) => location.pathname} />
         <Scripts />
         <LiveReload />
       </body>
     </html>
+  );
+};
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    switch (error.status) {
+      case 404: {
+        return (
+          <ErrorBoundaryProvider
+            title={"404".concat(" | ", error.data.error || "Oops!")}
+          >
+            <NotFound text={error.data.error} />
+          </ErrorBoundaryProvider>
+        );
+      }
+    }
+  }
+
+  return (
+    <ErrorBoundaryProvider>
+      <div className="text-red-400 bg-gray-800 p-8 h-screen">
+        <h1 className="p-4">
+          Error: {error instanceof Error ? error.message : "Unknown Error"}
+        </h1>
+      </div>
+    </ErrorBoundaryProvider>
   );
 }

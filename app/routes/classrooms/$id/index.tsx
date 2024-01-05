@@ -54,12 +54,8 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const id = params.id;
   if (!id) throw json({ error: "No classroom ID provided" }, 404);
 
-  const [user, classroom] = await Promise.all([
-    authenticate(request),
-    getClassroom(id),
-  ]);
-
-  if (!classroom) throw json({ error: "Classroom not found" }, 404);
+  const user = await authenticate(request);
+  const classroom = await getClassroom(id, user.id);
 
   return json({ user, classroom });
 };

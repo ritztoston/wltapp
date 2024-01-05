@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { json } from "@remix-run/node";
 
 import { prisma } from "~/db.server";
 import { generateRandomCode } from "~/utilities";
@@ -84,19 +85,46 @@ export const getClassrooms = async (id: string) => {
   });
 };
 
-export const getClassroom = async (id: string) => {
-  return prisma.classroom.findUnique({
-    where: {
-      id: id,
-    },
-    include: {
-      posts: {
-        include: {
-          author: true,
-        },
+export const getClassroom = async (id: string, userId: string) => {
+  try {
+    return await prisma.classroom.findFirstOrThrow({
+      where: {
+        AND: [
+          {
+            id: id,
+          },
+          {
+            OR: [
+              {
+                students: {
+                  some: {
+                    id: userId,
+                  },
+                },
+              },
+              {
+                ownerId: userId,
+              },
+            ],
+          },
+        ],
       },
-      students: true,
-      owner: true,
-    },
-  });
+      include: {
+        posts: {
+          include: {
+            author: true,
+          },
+        },
+        students: true,
+        owner: true,
+      },
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === "P2025") {
+        throw json({ error: "You are not a member of this classroom" }, 404);
+      }
+    }
+    throw e;
+  }
 };
