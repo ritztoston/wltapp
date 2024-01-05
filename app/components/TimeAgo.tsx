@@ -11,6 +11,8 @@ const units: Intl.RelativeTimeFormatUnit[] = [
   "second",
 ];
 
+const filter = ["year", "month", "week", "day"];
+
 export const TimeAgo = ({ date }: { date: string }) => {
   const [daysAgo, setDaysAgo] = useState("");
 
@@ -19,6 +21,12 @@ export const TimeAgo = ({ date }: { date: string }) => {
       const formatted = DateTime.fromISO(date);
       const diff = formatted.diffNow().shiftTo(...units);
       const unit = units.find((unit) => diff.get(unit) !== 0) || "second";
+
+      if (filter.includes(unit)) {
+        return setDaysAgo(
+          DateTime.fromISO(date).toLocaleString(DateTime.DATETIME_MED),
+        );
+      }
 
       const relativeFormatter = new Intl.RelativeTimeFormat("en", {
         numeric: "auto",
