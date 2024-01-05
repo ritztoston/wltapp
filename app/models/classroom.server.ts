@@ -63,8 +63,11 @@ export const joinClassroom = async (
   }
 };
 
-export const getClassrooms = async (id: string) => {
+export const getClassrooms = async (id: string, cursor?: string | null) => {
   return prisma.classroom.findMany({
+    take: cursor ? 5 : 18,
+    skip: cursor ? 1 : 0,
+    cursor: cursor ? { id: cursor } : undefined,
     where: {
       OR: [
         {

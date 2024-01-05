@@ -12,6 +12,7 @@ interface LocalProps {
   title?: string;
   sidebar?: ReactNode;
   notification?: Snackbar | null;
+  isInfiniteScrolling?: boolean;
 }
 
 export const Content = (props: LocalProps) => {
@@ -41,10 +42,13 @@ export const Content = (props: LocalProps) => {
                 </div>
                 <TitleBar title={props.title} />
 
-                <div className="hide-scrollbar p-6 xl:px-24 2xl:px-40 lg:py-4 xl:py-10 overflow-y-auto">
-                {/* <div className="hide-scrollbar py-6 xl:py-10 w-11/12 2xl:w-8/12 mx-auto overflow-y-auto"> */}
-                  {props.children}
-                </div>
+                {!props.isInfiniteScrolling ? (
+                  <div className="hide-scrollbar p-6 xl:px-24 2xl:px-40 lg:py-4 xl:py-10 overflow-y-auto">
+                    {props.children}
+                  </div>
+                ) : (
+                  props.children
+                )}
               </div>
               {props.sidebar ? (
                 <div className="hide-scrollbar overflow-y-auto border-l border-gray-600 z-20 w-0 lg:w-64 xl:w-80 transition-all ease-in-out duration-300">
