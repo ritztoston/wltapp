@@ -26,6 +26,8 @@ import { createClassroom, getClassrooms } from "~/models/classroom.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
 import { authenticate, commitSession, getSession } from "~/utilities/auth";
 
+type Intent = "create" | "join";
+
 interface Fields {
   name: string;
 }
@@ -45,23 +47,32 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     request.formData(),
   ]);
 
-  const name = formData.get("name") as string;
+  const intent = formData.get("intent") as Intent;
 
-  const result = await createClassroom({
-    name,
-    userId: user.id,
-  });
+  switch (intent) {
+    case "create": {
+      const name = formData.get("name") as string;
 
-  session.set("user", {
-    ...user,
-    moderated: [result, ...user.moderated.filter((_, index) => !(index >= 4))],
-  });
+      const result = await createClassroom({
+        name,
+        userId: user.id,
+      });
 
-  return redirect("/classrooms/".concat(result.id), {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  });
+      session.set("user", {
+        ...user,
+        moderated: [
+          result,
+          ...user.moderated.filter((_, index) => !(index >= 4)),
+        ],
+      });
+
+      return redirect("/classrooms/".concat(result.id), {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+    }
+  }
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -102,6 +113,7 @@ export default function ClassroomsPage() {
 
     setOpen(false);
 
+    formData.set("intent", "create");
     submit(formData, {
       method: "post",
     });
