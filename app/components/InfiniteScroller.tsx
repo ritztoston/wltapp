@@ -1,11 +1,13 @@
 import { ReactNode, useEffect, useRef } from "react";
 
-export const InfiniteScroller = (props: {
+interface LocalProps {
   children: ReactNode;
   isLoading: boolean;
   shouldFetch: boolean;
   loadNext: () => void;
-}) => {
+}
+
+export const InfiniteScroller = (props: LocalProps) => {
   const { children, isLoading, shouldFetch, loadNext } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollListener = useRef(loadNext);

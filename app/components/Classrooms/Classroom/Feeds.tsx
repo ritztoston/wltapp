@@ -1,3 +1,4 @@
+import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
 import parse from "html-react-parser";
 
 import { ClassroomWithStudents } from "~/models/classroom.server";
@@ -5,7 +6,12 @@ import { getUserFullName } from "~/utilities";
 
 import { TimeAgo } from "../../TimeAgo";
 
-export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
+interface LocalProps {
+  posts: ClassroomWithStudents["posts"];
+  isLoading: boolean;
+}
+
+export const Feeds = ({ posts, isLoading }: LocalProps) => {
   return (
     <div className="flex flex-col-reverse">
       {posts.map((post) => (
@@ -46,6 +52,9 @@ export const Feeds = ({ posts }: { posts: ClassroomWithStudents["posts"] }) => {
           </div>
         </div>
       ))}
+      {isLoading ? (
+        <ArrowDownCircleIcon className="animate-bounce h-10 w-10 text-main-blue" />
+      ) : null}
     </div>
   );
 };

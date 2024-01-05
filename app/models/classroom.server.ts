@@ -88,7 +88,11 @@ export const getClassrooms = async (id: string, cursor?: string | null) => {
   });
 };
 
-export const getClassroom = async (id: string, userId: string) => {
+export const getClassroom = async (
+  id: string,
+  userId: string,
+  cursor?: string | null,
+) => {
   try {
     return await prisma.classroom.findFirstOrThrow({
       where: {
@@ -114,8 +118,14 @@ export const getClassroom = async (id: string, userId: string) => {
       },
       include: {
         posts: {
+          take: cursor ? -2 : -10,
+          skip: cursor ? 1 : 0,
+          cursor: cursor ? { id: cursor } : undefined,
           include: {
             author: true,
+          },
+          orderBy: {
+            createdAt: "asc",
           },
         },
         students: true,
