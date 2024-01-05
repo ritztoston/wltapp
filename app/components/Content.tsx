@@ -48,7 +48,7 @@ export const Content = (props: LocalProps) => {
               </div>
               {props.sidebar ? (
                 <div className="hide-scrollbar overflow-y-auto border-l border-gray-600 z-20 w-0 lg:w-64 xl:w-80 transition-all ease-in-out duration-300">
-                  <div className="sm:px-4 px-8 py-6">{props.sidebar}</div>
+                  <div className="sm:px-6 px-8 py-6">{props.sidebar}</div>
                 </div>
               ) : null}
             </div>

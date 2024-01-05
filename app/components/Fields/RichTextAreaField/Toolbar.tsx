@@ -23,7 +23,7 @@ export const Toolbar = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={classNames(
-          editor.isActive("bold") ? "bg-main-blue/90" : "",
+          editor.isActive("bold") ? "bg-main-blue/25" : "",
           "text-gray-300 p-1.5 rounded-sm",
         )}
       >
@@ -34,7 +34,7 @@ export const Toolbar = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={classNames(
-          editor.isActive("italic") ? "bg-main-blue/90 " : "",
+          editor.isActive("italic") ? "bg-main-blue/25 " : "",
           "text-gray-300 p-1.5 rounded-sm",
         )}
       >
@@ -45,7 +45,7 @@ export const Toolbar = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         className={classNames(
-          editor.isActive("strike") ? "bg-main-blue/90 " : "",
+          editor.isActive("strike") ? "bg-main-blue/25 " : "",
           "text-gray-300 p-1.5 rounded-sm",
         )}
       >
@@ -55,7 +55,7 @@ export const Toolbar = ({ editor }: { editor: Editor | null }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={classNames(
-          editor.isActive("bulletList") ? "bg-main-blue/90 " : "",
+          editor.isActive("bulletList") ? "bg-main-blue/25 " : "",
           "text-gray-300 p-1.5 rounded-sm",
         )}
       >
@@ -65,7 +65,7 @@ export const Toolbar = ({ editor }: { editor: Editor | null }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={classNames(
-          editor.isActive("orderedList") ? "bg-main-blue/90 " : "",
+          editor.isActive("orderedList") ? "bg-main-blue/25 " : "",
           "text-gray-300 p-1.5 rounded-sm",
         )}
       >
@@ -75,7 +75,7 @@ export const Toolbar = ({ editor }: { editor: Editor | null }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={classNames(
-          editor.isActive("heading", { level: 2 }) ? "bg-main-blue/90 " : "",
+          editor.isActive("heading", { level: 2 }) ? "bg-main-blue/25 " : "",
           "text-gray-300 p-1.5 rounded-sm",
         )}
       >

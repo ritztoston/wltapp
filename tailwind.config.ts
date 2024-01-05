@@ -21,12 +21,12 @@ export default {
             h2: {
               color: "inherit",
               fontWeight: "700",
-              marginTop: 0,
-              marginBottom: 0,
-            },
-            ul: {
               marginTop: "0.5rem",
               marginBottom: "0.5rem",
+            },
+            ul: {
+              marginTop: "0.2rem",
+              marginBottom: "0.2rem",
             },
             "ul li": {
               marginTop: 0,
@@ -37,8 +37,8 @@ export default {
               marginBottom: 0,
             },
             ol: {
-              marginTop: "0.5rem",
-              marginBottom: "0.5rem",
+              marginTop: "0.2rem",
+              marginBottom: "0.2rem",
             },
             "ol li": {
               marginTop: 0,
