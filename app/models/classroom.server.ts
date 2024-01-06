@@ -118,14 +118,14 @@ export const getClassroom = async (
       },
       include: {
         posts: {
-          take: cursor ? -2 : -10,
+          take: cursor ? 2 : 10,
           skip: cursor ? 1 : 0,
           cursor: cursor ? { id: cursor } : undefined,
           include: {
             author: true,
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         students: true,

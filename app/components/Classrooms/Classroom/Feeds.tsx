@@ -13,11 +13,11 @@ interface LocalProps {
 
 export const Feeds = ({ posts, isLoading }: LocalProps) => {
   return (
-    <div className="flex flex-col-reverse">
+    <div className="flex flex-col">
       {posts.map((post) => (
         <div
           key={post.id}
-          className="mb-4 first:mb-0 bg-gray-800 rounded-lg p-4 border border-gray-700"
+          className="mb-4 last:mb-0 bg-gray-800 rounded-lg p-4 border border-gray-700 transition ease-in duration-300"
         >
           <div className="relative">
             <div className="relative flex items-start space-x-3">
@@ -53,7 +53,7 @@ export const Feeds = ({ posts, isLoading }: LocalProps) => {
         </div>
       ))}
       {isLoading ? (
-        <ArrowDownCircleIcon className="animate-bounce h-10 w-10 text-main-blue" />
+        <ArrowDownCircleIcon className="animate-bounce h-10 w-10 text-main-blue self-center mt-8" />
       ) : null}
     </div>
   );

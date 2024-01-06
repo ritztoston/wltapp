@@ -114,6 +114,11 @@ export default function ClassroomsPage() {
     }
   }, [fetcher.data]);
 
+  const loadNextHandler = () => {
+    fetcher.load("?cursor=".concat(classrooms[classrooms.length - 1].id));
+    setShouldFetch(false);
+  };
+
   const handleAddClassroom = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Clear errors on submit
@@ -149,10 +154,7 @@ export default function ClassroomsPage() {
   return (
     <Content title="Classrooms" isInfiniteScrolling>
       <InfiniteScroller
-        loadNext={() => {
-          fetcher.load("?cursor=".concat(classrooms[classrooms.length - 1].id));
-          setShouldFetch(false);
-        }}
+        loadNext={loadNextHandler}
         isLoading={isLoading}
         shouldFetch={shouldFetch}
       >

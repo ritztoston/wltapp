@@ -92,10 +92,15 @@ export default function ClassroomPage() {
 
     if (fetcher.data && fetcher.data.classroom.posts.length > 0) {
       const newItems = fetcher.data.classroom.posts;
-      setPosts((x) => [...newItems, ...x]);
+      setPosts((x) => [...x, ...newItems]);
       setShouldFetch(true);
     }
   }, [fetcher.data]);
+
+  const loadNextHandler = () => {
+    fetcher.load("?cursor=".concat(posts[posts.length - 1].id));
+    setShouldFetch(false);
+  };
 
   return (
     <Content
@@ -105,10 +110,7 @@ export default function ClassroomPage() {
       isInfiniteScrolling
     >
       <InfiniteScroller
-        loadNext={() => {
-          fetcher.load("?cursor=".concat(posts[0].id));
-          setShouldFetch(false);
-        }}
+        loadNext={loadNextHandler}
         isLoading={isLoading}
         shouldFetch={shouldFetch}
       >
