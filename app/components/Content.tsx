@@ -43,7 +43,7 @@ export const Content = (props: LocalProps) => {
                 <TitleBar title={props.title} />
 
                 {!props.isInfiniteScrolling ? (
-                  <div className="hide-scrollbar p-6 xl:px-24 2xl:px-40 lg:py-4 xl:py-10 overflow-y-auto">
+                  <div className="hide-scrollbar px-6 py-12 xl:px-24 2xl:px-40 lg:py-4 xl:py-10 overflow-y-auto">
                     {props.children}
                   </div>
                 ) : (
