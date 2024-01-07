@@ -19,7 +19,6 @@ import { getClassroom } from "~/models/classroom.server";
 import { createPost } from "~/models/post.server";
 import { capitalize } from "~/utilities";
 import { authenticate } from "~/utilities/auth";
-import { Snackbar } from "~/utilities/types";
 import { useLiveLoader } from "~/utilities/useLiveLoader";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -71,7 +70,7 @@ export default function ClassroomPage() {
   const isLoading = fetcher.state === "loading";
 
   const [openPostDialog, setPostDialog] = useState(false);
-  const [notification, setNotification] = useState<Snackbar | null>(null);
+  // const [notification, setNotification] = useState<Snackbar | null>(null);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [posts, setPosts] = useState([...classroom.posts]);
 
@@ -105,7 +104,6 @@ export default function ClassroomPage() {
   return (
     <Content
       title={classroom.name}
-      notification={notification}
       sidebar={<Sidebar classroom={classroom} />}
       isInfiniteScrolling
     >
@@ -118,7 +116,7 @@ export default function ClassroomPage() {
           <div className="col-span-9 sm:col-span-3 xl:col-span-2 rounded-lg">
             <ClassCode
               classroom={classroom}
-              setNotification={setNotification}
+              // setNotification={setNotification}
             />
           </div>
           <div className="col-span-9 sm:col-span-6 xl:col-span-7 flex flex-col gap-y-4">

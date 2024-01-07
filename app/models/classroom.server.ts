@@ -32,18 +32,28 @@ export const createClassroom = async ({ name, userId }: Create) => {
   });
 };
 
-export const joinClassroom = async (
-  classroomId: string,
-  studentId: string,
-  moderatorId: string,
-) => {
-  if (studentId === moderatorId)
-    return "You are the moderator of this classroom";
+export const joinClassroom = async (code: string, studentId: string) => {
+  const classroom = await prisma.classroom.findUnique({
+    where: {
+      code: code,
+    },
+  });
+
+  if (!classroom)
+    throw json(null, {
+      status: 404,
+      statusText: "Classroom not found. Please check the code and try again.",
+    });
+
+  if (studentId === classroom.ownerId)
+    throw new Response("You are the moderator of this classroom", {
+      status: 409,
+    });
 
   try {
     return await prisma.classroom.update({
       where: {
-        id: classroomId,
+        code: code,
       },
       data: {
         students: {
@@ -56,7 +66,9 @@ export const joinClassroom = async (
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        return "You are already on this classroom.";
+        throw new Response("You are already on this classroom.", {
+          status: 409,
+        });
       }
     }
     throw e;

@@ -4,7 +4,6 @@ import { ReactNode, useState } from "react";
 import { Snackbar } from "~/utilities/types";
 
 import { Navbar } from "./Navbar/Navbar";
-import Notifications from "./Notifications";
 import { TitleBar } from "./TitleBar";
 
 interface LocalProps {
@@ -59,15 +58,6 @@ export const Content = (props: LocalProps) => {
           </div>
         </div>
       </div>
-      {props.notification ? (
-        <Notifications
-          title={props.notification.title}
-          description={props.notification.description}
-          type={props.notification.type}
-          key={props.notification.key}
-          close={props.notification.close}
-        />
-      ) : null}
     </>
   );
 };
