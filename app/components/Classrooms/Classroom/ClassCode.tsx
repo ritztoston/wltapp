@@ -1,23 +1,18 @@
+import {
+  ClipboardDocumentIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/solid";
 import { Classroom } from "@prisma/client";
+import { useState } from "react";
 
-export const ClassCode = ({
-  classroom,
-  // setNotification,
-}: {
-  classroom: Classroom;
-  // setNotification: Dispatch<SetStateAction<Snackbar | null>>;
-}) => {
-  // const notification: Snackbar = {
-  //   title: "Copied to clipboard",
-  //   type: "success",
-  //   key: Date.now().toString(),
-  //   close: true,
-  // };
+export const ClassCode = ({ classroom }: { classroom: Classroom }) => {
+  const [copied, setCopied] = useState(false);
 
-  // const handleCopyToClipboard = () => {
-  //   setNotification(notification);
-  //   navigator.clipboard.writeText(classroom.code);
-  // };
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(classroom.code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="rounded-lg grid grid-cols-1 gap-4 border border-gray-700 p-4 text-gray-300">
@@ -32,16 +27,23 @@ export const ClassCode = ({
               defaultValue={classroom.code}
             />
           </div>
-          {/* <button
+          <button
             type="button"
-            className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-700 hover:bg-gray-700 active:bg-gray-800"
-            onClick={handleCopyToClipboard}
+            className="transition ease-in-out duration-300 relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-700 hover:bg-gray-700 active:bg-gray-800"
+            onClick={handleCopyCode}
           >
-            <ClipboardDocumentListIcon
-              className="-ml-0.5 h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          </button> */}
+            {copied ? (
+              <CheckCircleIcon
+                className="-ml-0.5 h-5 w-5 text-green-300"
+                aria-hidden="true"
+              />
+            ) : (
+              <ClipboardDocumentIcon
+                className="-ml-0.5 h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            )}
+          </button>
         </div>
       </div>
     </div>

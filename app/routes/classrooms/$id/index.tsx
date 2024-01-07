@@ -114,10 +114,7 @@ export default function ClassroomPage() {
       >
         <div className="grid grid-cols-9 gap-4">
           <div className="col-span-9 sm:col-span-3 xl:col-span-2 rounded-lg">
-            <ClassCode
-              classroom={classroom}
-              // setNotification={setNotification}
-            />
+            <ClassCode classroom={classroom} />
           </div>
           <div className="col-span-9 sm:col-span-6 xl:col-span-7 flex flex-col gap-y-4">
             <PostButton state={[openPostDialog, setPostDialog]} user={user} />

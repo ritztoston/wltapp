@@ -10,7 +10,7 @@ export const TitleBar = ({ title }: { title?: string }) => {
     <div
       className={classNames(
         pathnames.length ? "visible" : "invisible",
-        "p-4 xl:px-24 2xl:px-40 lg:z-10 bg-gray-800 hidden lg:block shadow-sm",
+        "p-4 xl:px-24 2xl:px-40 lg:z-10 bg-gray-800 hidden lg:block drop-shadow",
       )}
     >
       {/* <div>

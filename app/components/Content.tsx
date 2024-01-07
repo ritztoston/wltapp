@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import { Snackbar } from "~/utilities/types";
 
 import { Navbar } from "./Navbar/Navbar";
-import { TitleBar } from "./TitleBar";
+import { TitleBar } from "./Navbar/TitleBar";
 
 interface LocalProps {
   children: ReactNode;
