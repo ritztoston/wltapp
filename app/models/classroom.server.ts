@@ -40,14 +40,15 @@ export const joinClassroom = async (code: string, studentId: string) => {
   });
 
   if (!classroom)
-    throw json(null, {
+    throw new Response(null, {
       status: 404,
       statusText: "Classroom not found. Please check the code and try again.",
     });
 
   if (studentId === classroom.ownerId)
-    throw new Response("You are the moderator of this classroom", {
+    throw new Response(null, {
       status: 409,
+      statusText: "You are already on this classroom.",
     });
 
   try {
@@ -66,8 +67,9 @@ export const joinClassroom = async (code: string, studentId: string) => {
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        throw new Response("You are already on this classroom.", {
+        throw new Response(null, {
           status: 409,
+          statusText: "You are already on this classroom.",
         });
       }
     }

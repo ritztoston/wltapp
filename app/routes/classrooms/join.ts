@@ -1,12 +1,14 @@
-import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
 
 import { joinClassroom } from "~/models/classroom.server";
-import { setNotification } from "~/notification.server";
+import { Toast, setToast } from "~/toast.server";
 import { DEFAULT_AUTH_HOME } from "~/utilities";
-import { authenticate, commitSession } from "~/utilities/auth";
-import { Snackbar } from "~/utilities/types";
+import { authenticate } from "~/utilities/auth";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const searchParams = new URL(request.url).searchParams;
+  const path = searchParams.get("path");
+
   try {
     const [user, formData] = await Promise.all([
       authenticate(request),
@@ -20,29 +22,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return redirect("/classrooms/".concat(result.id));
   } catch (error) {
     if (error instanceof Response) {
-      const notification: Snackbar = {
+      const toast: Toast = {
         title: "Unable to join classroom",
-        description: error.statusText,
+        message: error.statusText,
         type: "error",
-        close: true,
+        key: new Date().toISOString(),
       };
 
-      const session = await setNotification(request, notification);
-
-      return redirect("/", {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
-
-      return json(
-        { notification },
-        {
-          headers: {
-            "Set-Cookie": await commitSession(session),
-          },
-        },
-      );
+      const headers = await setToast(toast, error.headers);
+      return redirect(path || DEFAULT_AUTH_HOME, { headers });
     }
     throw error;
   }

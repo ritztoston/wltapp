@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   json,
+  useLoaderData,
   useRouteError,
 } from "@remix-run/react";
 import { ReactNode } from "react";
@@ -16,6 +17,8 @@ import { ReactNode } from "react";
 import stylesheet from "~/tailwind.css";
 
 import { NotFound } from "./components/NotFound";
+import { Toast } from "./components/Toast";
+import { popToast } from "./toast.server";
 import { getUserSession } from "./utilities/auth";
 
 export const links: LinksFunction = () => [
@@ -58,11 +61,14 @@ export const links: LinksFunction = () => [
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserSession(request);
+  const { toast, headers } = await popToast(request);
 
-  return json({ user });
+  return json({ user, toast }, { headers });
 };
 
 export default function App() {
+  const { toast } = useLoaderData<typeof loader>();
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -73,6 +79,7 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full bg-gray-800 overflow-hidden">
+        <Toast toast={toast} />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
