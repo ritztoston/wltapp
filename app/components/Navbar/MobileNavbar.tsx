@@ -125,7 +125,7 @@ export const MobileNavbar = ({
                         ))}
                       </ul>
                     </li>
-                    {user.moderated.length ? (
+                    {user.moderated.length && user.moderated.length > 3 ? (
                       <li>
                         <ClassroomNavbar classrooms={user.moderated} />
                       </li>
