@@ -13,7 +13,7 @@ export const useLiveLoader = <T>() => {
   const { revalidate } = useRevalidator();
 
   useEffect(() => {
-    revalidate();
+    if (data) revalidate();
   }, [data, revalidate]);
 
   return useLoaderData<T>();
