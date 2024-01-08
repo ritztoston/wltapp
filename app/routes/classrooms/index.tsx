@@ -27,6 +27,7 @@ import { InputField } from "~/components/Fields/InputField";
 import { InfiniteScroller } from "~/components/InfiniteScroller";
 import { InputModal } from "~/components/Modals/InputModal";
 import { createClassroom, getClassrooms } from "~/models/classroom.server";
+import { Toast, setToast } from "~/toast.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
 import { authenticate, commitSession, getSession } from "~/utilities/auth";
 
@@ -70,11 +71,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         ],
       });
 
-      return redirect("/classrooms/".concat(result.id), {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
+      const toast: Toast = {
+        message: `Classroom ${result.name} created!`,
+        type: "success",
+        key: new Date().toISOString(),
+      };
+
+      const headers = await setToast(toast);
+      headers.append("Set-Cookie", await commitSession(session));
+
+      return redirect("/classrooms/".concat(result.id), { headers });
     }
   }
 };

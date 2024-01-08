@@ -19,11 +19,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     const result = await joinClassroom(code, user.id);
 
-    return redirect("/classrooms/".concat(result.id));
+    const toast: Toast = {
+      message: `You have joined ${result.name}!`,
+      type: "success",
+      key: new Date().toISOString(),
+    };
+
+    const headers = await setToast(toast);
+
+    return redirect("/classrooms/".concat(result.id), { headers });
   } catch (error) {
     if (error instanceof Response) {
       const toast: Toast = {
-        title: "Unable to join classroom",
         message: error.statusText,
         type: "error",
         key: new Date().toISOString(),

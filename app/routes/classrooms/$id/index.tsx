@@ -35,7 +35,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const id = params.id;
-  if (!id) throw json({ error: "No classroom name provided" }, 404);
+  if (!id)
+    throw new Response(null, {
+      status: 404,
+      statusText: "No classroom ID provided",
+    });
 
   const user = await authenticate(request);
   const formData = await request.formData();
@@ -53,7 +57,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const id = params.id;
-  if (!id) throw json({ error: "No classroom ID provided" }, 404);
+  if (!id)
+    throw new Response(null, {
+      status: 404,
+      statusText: "No classroom ID provided",
+    });
 
   const url = new URL(request.url);
   const cursor = url.searchParams.get("cursor");
