@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { Auth0Profile } from "remix-auth-auth0";
 
-import { prisma } from "~/modules/prisma/db.server";
+import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
 

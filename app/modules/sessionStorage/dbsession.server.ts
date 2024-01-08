@@ -5,7 +5,7 @@ import type {
 } from "@remix-run/node";
 import { createSessionStorage } from "@remix-run/node";
 
-import { prisma } from "~/modules/prisma/db.server";
+import { prisma } from "~/db.server";
 
 export const createDatabaseSessionStorage = <
   Data = SessionData,
