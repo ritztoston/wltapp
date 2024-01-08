@@ -97,35 +97,26 @@ export default function ClassroomPage() {
   const isLoading = fetcher.state === "loading";
 
   const [openPostDialog, setPostDialog] = useState(false);
-  // const [notification, setNotification] = useState<Snackbar | null>(null);
   const [shouldFetch, setShouldFetch] = useState(true);
-  const [posts, setPosts] = useState([...classroom.posts]);
   const [selectedPost, setSelectedPost] = useState({ id: "", content: "" });
 
   useEffect(() => {
-    // set posts again when the classroom page changes
-    // it's a hacky way to make sure the posts are updated
-    // for some reason the posts are not updated when the classroom page changes
-    setPosts([...classroom.posts]);
-
-    // set refetch to true when adding a new post
+    // set re-fetch to posts when classroom data changes
     setShouldFetch(true);
-  }, [classroom.posts]);
+  }, [classroom.id]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.classroom.posts.length === 0) {
-      return setShouldFetch(false);
-    }
-
     if (fetcher.data && fetcher.data.classroom.posts.length > 0) {
       const newItems = fetcher.data.classroom.posts;
-      setPosts((x) => [...x, ...newItems]);
+      classroom.posts = [...classroom.posts, ...newItems];
       setShouldFetch(true);
     }
-  }, [fetcher.data]);
+  }, [classroom, fetcher.data]);
 
   const loadNextHandler = () => {
-    fetcher.load("?cursor=".concat(posts[posts.length - 1].id));
+    fetcher.load(
+      "?cursor=".concat(classroom.posts[classroom.posts.length - 1].id),
+    );
     setShouldFetch(false);
   };
 
@@ -150,7 +141,7 @@ export default function ClassroomPage() {
               user={user}
             />
             <Feeds
-              posts={posts}
+              posts={classroom.posts}
               isLoading={isLoading}
               state={[setPostDialog, setSelectedPost]}
             />

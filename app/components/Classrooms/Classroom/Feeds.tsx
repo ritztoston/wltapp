@@ -126,7 +126,7 @@ export const Feeds = ({ posts, isLoading, state }: LocalProps) => {
               </Menu>
             </div>
           </div>
-          <div className="prose mt-4 text-sm text-gray-300">
+          <div className="mx-2 prose mt-4 text-sm text-gray-300">
             {parse(post.content)}
           </div>
         </div>
