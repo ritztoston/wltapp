@@ -5,8 +5,15 @@ import { useState } from "react";
 
 import { Toolbar } from "./Toolbar";
 
-export const RichTextAreaField = () => {
-  const [content, setContent] = useState("");
+export const RichTextAreaField = ({
+  post,
+}: {
+  post?: {
+    id: string;
+    content: string;
+  };
+}) => {
+  const [content, setContent] = useState(post?.content || "");
 
   const editor = useEditor({
     extensions: [

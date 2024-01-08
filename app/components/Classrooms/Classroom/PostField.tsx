@@ -5,8 +5,13 @@ import { PostCard } from "~/components/Post";
 
 export const PostField = ({
   state,
+  post,
 }: {
   state: [boolean, Dispatch<SetStateAction<boolean>>];
+  post?: {
+    id: string;
+    content: string;
+  };
 }) => {
   const [open, setOpen] = state;
 
@@ -36,7 +41,7 @@ export const PostField = ({
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-              <PostCard state={state} />
+              <PostCard state={state} post={post} />
             </Dialog.Panel>
           </Transition.Child>
         </div>

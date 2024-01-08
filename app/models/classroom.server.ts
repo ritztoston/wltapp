@@ -22,9 +22,9 @@ export type ClassroomWithStudents = Prisma.ClassroomGetPayload<{
 }>;
 
 export const createClassroom = async ({ name, userId }: Create) => {
-  return await prisma.classroom.create({
+  return prisma.classroom.create({
     data: {
-      name: name,
+      name,
       createdAt: new Date().toISOString(),
       ownerId: userId,
       code: generateRandomCode(6),

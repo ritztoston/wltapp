@@ -5,14 +5,29 @@ export const PostButton = ({
   state,
   user,
 }: {
-  state: [boolean, Dispatch<SetStateAction<boolean>>];
+  state: [
+    boolean,
+    Dispatch<SetStateAction<boolean>>,
+    Dispatch<
+      SetStateAction<{
+        id: string;
+        content: string;
+      }>
+    >,
+  ];
   user: User;
 }) => {
-  const [, setOpen] = state;
+  const [, setOpen, setSelectedPost] = state;
+
+  const handleOpenNewPost = () => {
+    setOpen(true);
+    setSelectedPost({ id: "", content: "" });
+  };
+
   return (
     <button
       className="flex space-x-4 bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700 items-center text-gray-500 ring-0 active:ring-0 focus:ring-0"
-      onClick={() => setOpen(true)}
+      onClick={handleOpenNewPost}
     >
       <div className="flex-shrink-0">
         <img

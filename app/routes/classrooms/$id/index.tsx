@@ -15,7 +15,7 @@ import { Sidebar } from "~/components/Classrooms/Classroom/Sidebar";
 import { Content } from "~/components/Content";
 import { InfiniteScroller } from "~/components/InfiniteScroller";
 import { getClassroom } from "~/models/classroom.server";
-import { createPost } from "~/models/post.server";
+import { upsertPost } from "~/models/post.server";
 import { authenticate } from "~/modules/auth0/auth";
 import { emitter } from "~/modules/serverSentEvents/emitter.server";
 import { useLiveLoader } from "~/modules/serverSentEvents/useLiveLoader";
@@ -44,8 +44,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await authenticate(request);
   const formData = await request.formData();
   const comment = formData.get("comment") as string;
+  const postId = formData.get("id") as string;
 
-  const result = await createPost(comment, id, user.id);
+  const result = await upsertPost(comment, id, user.id, postId ?? "");
 
   if (!result) {
     return json({ success: false, error: result });
@@ -81,6 +82,7 @@ export default function ClassroomPage() {
   // const [notification, setNotification] = useState<Snackbar | null>(null);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [posts, setPosts] = useState([...classroom.posts]);
+  const [selectedPost, setSelectedPost] = useState({ id: "", content: "" });
 
   useEffect(() => {
     // set posts again when the classroom page changes
@@ -125,11 +127,21 @@ export default function ClassroomPage() {
             <ClassCode classroom={classroom} />
           </div>
           <div className="col-span-9 sm:col-span-6 xl:col-span-7 flex flex-col gap-y-4">
-            <PostButton state={[openPostDialog, setPostDialog]} user={user} />
-            <Feeds posts={posts} isLoading={isLoading} />
+            <PostButton
+              state={[openPostDialog, setPostDialog, setSelectedPost]}
+              user={user}
+            />
+            <Feeds
+              posts={posts}
+              isLoading={isLoading}
+              state={[setPostDialog, setSelectedPost]}
+            />
           </div>
         </div>
-        <PostField state={[openPostDialog, setPostDialog]} />
+        <PostField
+          state={[openPostDialog, setPostDialog]}
+          post={selectedPost}
+        />
       </InfiniteScroller>
     </Content>
   );
