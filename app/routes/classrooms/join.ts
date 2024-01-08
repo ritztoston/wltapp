@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 
 import { joinClassroom } from "~/models/classroom.server";
 import { authenticate } from "~/modules/auth0/auth";
@@ -6,9 +6,6 @@ import { Toast, setToast } from "~/modules/toasts/toast.server";
 import { DEFAULT_AUTH_HOME } from "~/utilities";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const searchParams = new URL(request.url).searchParams;
-  const path = searchParams.get("path");
-
   try {
     const [user, formData] = await Promise.all([
       authenticate(request),
@@ -37,7 +34,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       };
 
       const headers = await setToast(toast, error.headers);
-      return redirect(path || DEFAULT_AUTH_HOME, { headers });
+      return json(null, { headers });
     }
     throw error;
   }

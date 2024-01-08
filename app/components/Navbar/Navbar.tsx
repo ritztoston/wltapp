@@ -104,7 +104,8 @@ export const Navbar = ({
 
     submit(formData, {
       method: "post",
-      action: "/classrooms/join".concat("?path=", location.pathname),
+      action: "/classrooms/join",
+      navigate: false,
     });
   };
 
