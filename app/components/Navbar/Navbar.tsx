@@ -6,12 +6,9 @@ import {
   FormEvent,
   ForwardRefExoticComponent,
   SetStateAction,
-  useEffect,
+  useMemo,
   useState,
 } from "react";
-import * as z from "zod";
-
-import { validationAction } from "~/utilities";
 
 import { InputField } from "../Fields/InputField";
 import { InputModal } from "../Modals/InputModal";
@@ -22,10 +19,6 @@ import { MobileNavbar } from "./MobileNavbar";
 interface Fields {
   code: string;
 }
-
-const schema = z.object({
-  code: z.string().min(1, "Code is required."),
-});
 
 export interface Nav {
   name: string;
@@ -56,30 +49,26 @@ export const Navbar = ({
   sidebarOpen: boolean;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>();
-  const [navigation, setNavigation] = useState<Nav[]>(navList);
 
-  const location = useLocation();
   const submit = useSubmit();
   const transition = useNavigation();
   const isSubmitting = transition.state === "submitting";
 
-  useEffect(() => {
-    // Get current path
-    const path = location.pathname;
-    // Set current path to true or false
-    setNavigation((prev) => {
-      return prev.map((item) => {
-        const firstPath = path.split("/")[1];
+  const navigation = useMemo(
+    () =>
+      navList.map((item) => {
+        const firstPath = location.pathname.split("/")[1];
         const href = item.href.split("/")[1];
         return {
           ...item,
           current: href === firstPath,
         };
-      });
-    });
-  }, [location.pathname]);
+      }),
+    [location.pathname],
+  );
 
   const handleJoinClassroom = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -89,15 +78,8 @@ export const Navbar = ({
     const formData = new FormData(event.currentTarget);
     const code = formData.get("code") as string;
 
-    const action = validationAction<Fields>({
-      body: {
-        code,
-      },
-      schema: schema,
-    });
-
-    if (action.errors) {
-      return setErrors(action.errors);
+    if (!code || code.length < 1) {
+      return setErrors({ code: "Code is required." });
     }
 
     setOpen(false);

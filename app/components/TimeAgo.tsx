@@ -1,6 +1,8 @@
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 
+const UPDATE_INTERVAL = 30000;
+
 const units: Intl.RelativeTimeFormatUnit[] = [
   "year",
   "month",
@@ -13,6 +15,10 @@ const units: Intl.RelativeTimeFormatUnit[] = [
 
 const filter = ["year", "month", "week", "day"];
 
+const relativeFormatter = new Intl.RelativeTimeFormat("en", {
+  numeric: "auto",
+});
+
 export const TimeAgo = ({ date }: { date: string }) => {
   const [daysAgo, setDaysAgo] = useState("");
 
@@ -20,7 +26,14 @@ export const TimeAgo = ({ date }: { date: string }) => {
     const updateDaysAgo = () => {
       const formatted = DateTime.fromISO(date);
       const diff = formatted.diffNow().shiftTo(...units);
-      const unit = units.find((unit) => diff.get(unit) !== 0) || "second";
+      let unit: Intl.RelativeTimeFormatUnit = "second";
+
+      for (const u of units) {
+        if (diff.get(u) !== 0) {
+          unit = u;
+          break;
+        }
+      }
 
       if (filter.includes(unit)) {
         return setDaysAgo(
@@ -28,14 +41,10 @@ export const TimeAgo = ({ date }: { date: string }) => {
         );
       }
 
-      const relativeFormatter = new Intl.RelativeTimeFormat("en", {
-        numeric: "auto",
-      });
-
       setDaysAgo(relativeFormatter.format(Math.trunc(diff.as(unit)), unit));
     };
 
-    const intervalId = setInterval(updateDaysAgo, 30000);
+    const intervalId = setInterval(updateDaysAgo, UPDATE_INTERVAL);
 
     updateDaysAgo(); // Initial update
 
