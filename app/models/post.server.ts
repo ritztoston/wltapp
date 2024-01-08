@@ -45,3 +45,11 @@ export const upsertPost = async (
     },
   });
 };
+
+export const deletePost = async (postId: string) => {
+  return await prisma.post.delete({
+    where: {
+      id: postId,
+    },
+  });
+};

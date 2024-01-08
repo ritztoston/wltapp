@@ -65,10 +65,17 @@ export const PostCard = ({
 
           <div className="absolute inset-x-0 bottom-0 flex justify-between pl-3 pr-2">
             <div className="flex" />
-            <div className="flex-shrink-0">
+            <div className="flex flex-shrink-0 gap-1">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-400 hover:text-gray-300 shadow-sm focus:outline-none ring-0"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
-                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm hover:text-main-blue/90"
+                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus:outline-none ring-0 bg-main-blue hover:bg-main-blue/50"
               >
                 {post?.id ? "Update" : "Post"}
               </button>

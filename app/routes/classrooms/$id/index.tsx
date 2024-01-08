@@ -15,10 +15,11 @@ import { Sidebar } from "~/components/Classrooms/Classroom/Sidebar";
 import { Content } from "~/components/Content";
 import { InfiniteScroller } from "~/components/InfiniteScroller";
 import { getClassroom } from "~/models/classroom.server";
-import { upsertPost } from "~/models/post.server";
+import { deletePost, upsertPost } from "~/models/post.server";
 import { authenticate } from "~/modules/auth0/auth";
 import { emitter } from "~/modules/serverSentEvents/emitter.server";
 import { useLiveLoader } from "~/modules/serverSentEvents/useLiveLoader";
+import { Toast, setToast } from "~/modules/toasts/toast.server";
 import { capitalize } from "~/utilities";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -46,14 +47,31 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const comment = formData.get("comment") as string;
   const postId = formData.get("id") as string;
 
-  const result = await upsertPost(comment, id, user.id, postId ?? "");
+  if (request.method === "POST") {
+    const result = await upsertPost(comment, id, user.id, postId ?? "");
 
-  if (!result) {
-    return json({ success: false, error: result });
+    if (!result) {
+      return json({ success: false, error: result });
+    }
+
+    emitter.emit(id);
+    return json({ success: true, result, error: {} });
   }
 
-  emitter.emit(id);
-  return json({ success: true, result, error: {} });
+  if (request.method === "DELETE") {
+    const idToDelete = formData.get("idToDelete") as string;
+    await deletePost(idToDelete);
+
+    const toast: Toast = {
+      message: "Post deleted",
+      type: "success",
+      key: new Date().toISOString(),
+    };
+
+    const headers = await setToast(toast);
+    emitter.emit(id);
+    return json({ success: true, error: {}, headers });
+  }
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
