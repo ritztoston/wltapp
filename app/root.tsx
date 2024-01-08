@@ -18,8 +18,8 @@ import stylesheet from "~/tailwind.css";
 
 import { NotFound } from "./components/NotFound";
 import { Toast } from "./components/Toast";
-import { popToast } from "./toast.server";
-import { getUserSession } from "./utilities/auth";
+import { getUserSession } from "./modules/auth0/auth";
+import { popToast } from "./modules/toasts/toast.server";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),

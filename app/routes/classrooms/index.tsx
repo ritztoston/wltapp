@@ -27,9 +27,9 @@ import { InputField } from "~/components/Fields/InputField";
 import { InfiniteScroller } from "~/components/InfiniteScroller";
 import { InputModal } from "~/components/Modals/InputModal";
 import { createClassroom, getClassrooms } from "~/models/classroom.server";
-import { Toast, setToast } from "~/toast.server";
+import { authenticate, commitSession, getSession } from "~/modules/auth0/auth";
+import { Toast, setToast } from "~/modules/toasts/toast.server";
 import { acronymizer, capitalize, validationAction } from "~/utilities";
-import { authenticate, commitSession, getSession } from "~/utilities/auth";
 
 type Intent = "create" | "join";
 

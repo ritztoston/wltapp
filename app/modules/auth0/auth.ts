@@ -1,11 +1,14 @@
 import { User } from "@prisma/client";
 import { Session } from "@remix-run/node";
 
-import { authenticator } from "~/auth0.server";
 import { UserWithClassrooms } from "~/models/user.server";
-import { logout, sessionStorage } from "~/session.server";
+import { authenticator } from "~/modules/auth0/auth0.server";
+import {
+  logout,
+  sessionStorage,
+} from "~/modules/sessionStorage/session.server";
 
-import { urlParser, useMatchesData } from ".";
+import { urlParser, useMatchesData } from "../../utilities";
 
 export const getSession = async (request: Request) => {
   const cookie = request.headers.get("Cookie");
@@ -30,7 +33,9 @@ export const getUserSession = async (request: Request) => {
   return user as User;
 };
 
-export const authenticate = async (request: Request): Promise<UserWithClassrooms> => {
+export const authenticate = async (
+  request: Request,
+): Promise<UserWithClassrooms> => {
   const session = await getSession(request);
   const user = session.get("user") as UserWithClassrooms | null;
 

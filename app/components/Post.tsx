@@ -1,7 +1,7 @@
 import { Form, useSubmit } from "@remix-run/react";
 import { Dispatch, SetStateAction } from "react";
 
-import { useUser } from "~/utilities/auth";
+import { useUser } from "~/modules/auth0/auth";
 
 import { RichTextAreaField } from "./Fields/RichTextAreaField/RichTextAreaField";
 

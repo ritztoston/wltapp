@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { json } from "@remix-run/node";
 
-import { prisma } from "~/db.server";
+import { prisma } from "~/modules/prisma/db.server";
 import { generateRandomCode } from "~/utilities";
 
 interface Create {

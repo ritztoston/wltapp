@@ -3,7 +3,7 @@ import { Auth0Strategy } from "remix-auth-auth0";
 import invariant from "tiny-invariant";
 
 import { UserWithClassrooms, upsertUser } from "~/models/user.server";
-import { sessionStorage } from "~/session.server";
+import { sessionStorage } from "~/modules/sessionStorage/session.server";
 
 invariant(process.env.APP_SITE, "APP_SITE must be set");
 invariant(process.env.AUTH0_CLIENT_ID, "AUTH0_CLIENT_ID must be set");

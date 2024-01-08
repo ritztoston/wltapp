@@ -4,8 +4,8 @@ import { Link } from "@remix-run/react";
 import { Dispatch, Fragment, SetStateAction } from "react";
 
 import Logo from "~/assets/classmaster.png";
+import { useUser } from "~/modules/auth0/auth";
 import { classNames } from "~/utilities";
-import { useUser } from "~/utilities/auth";
 
 import { ClassroomNavbar } from "./ClassroomNavbar";
 import { Nav } from "./Navbar";

@@ -1,4 +1,4 @@
-import { prisma } from "~/db.server";
+import { prisma } from "~/modules/prisma/db.server";
 
 export const createPost = async (
   content: string,

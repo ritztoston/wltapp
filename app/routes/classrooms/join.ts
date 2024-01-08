@@ -1,9 +1,9 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 
 import { joinClassroom } from "~/models/classroom.server";
-import { Toast, setToast } from "~/toast.server";
+import { authenticate } from "~/modules/auth0/auth";
+import { Toast, setToast } from "~/modules/toasts/toast.server";
 import { DEFAULT_AUTH_HOME } from "~/utilities";
-import { authenticate } from "~/utilities/auth";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const searchParams = new URL(request.url).searchParams;

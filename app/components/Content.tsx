@@ -1,8 +1,6 @@
 import { Bars3Icon } from "@heroicons/react/20/solid";
 import { ReactNode, useState } from "react";
 
-import { Snackbar } from "~/utilities/types";
-
 import { Navbar } from "./Navbar/Navbar";
 import { TitleBar } from "./Navbar/TitleBar";
 
@@ -10,7 +8,6 @@ interface LocalProps {
   children: ReactNode;
   title?: string;
   sidebar?: ReactNode;
-  notification?: Snackbar | null;
   isInfiniteScrolling?: boolean;
 }
 

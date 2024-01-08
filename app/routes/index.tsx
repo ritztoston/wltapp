@@ -2,8 +2,8 @@ import { LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
 import Logo from "~/assets/classmaster.png";
+import { getUserSession } from "~/modules/auth0/auth";
 import { DEFAULT_AUTH_HOME } from "~/utilities";
-import { getUserSession } from "~/utilities/auth";
 
 const contentDescription =
   "A comprehensive hub meticulously curated to empower educators with tools and resources for seamless classroom management and enriched learning experiences. From innovative technology applications to time-tested pedagogical strategies, this centralized space is designed to help teachers refine their approaches and stay abreast of evolving methodologies.";

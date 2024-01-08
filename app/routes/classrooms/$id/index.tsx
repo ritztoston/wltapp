@@ -14,12 +14,12 @@ import { PostField } from "~/components/Classrooms/Classroom/PostField";
 import { Sidebar } from "~/components/Classrooms/Classroom/Sidebar";
 import { Content } from "~/components/Content";
 import { InfiniteScroller } from "~/components/InfiniteScroller";
-import { emitter } from "~/emitter.server";
 import { getClassroom } from "~/models/classroom.server";
 import { createPost } from "~/models/post.server";
+import { authenticate } from "~/modules/auth0/auth";
+import { emitter } from "~/modules/serverSentEvents/emitter.server";
+import { useLiveLoader } from "~/modules/serverSentEvents/useLiveLoader";
 import { capitalize } from "~/utilities";
-import { authenticate } from "~/utilities/auth";
-import { useLiveLoader } from "~/utilities/useLiveLoader";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const classroom = data?.classroom;

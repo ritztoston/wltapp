@@ -1,7 +1,7 @@
 import { createCookie } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 
-import { authenticator } from "~/auth0.server";
+import { authenticator } from "~/modules/auth0/auth0.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const returnToCookie = createCookie("returnToCookie", { maxAge: 3600 });

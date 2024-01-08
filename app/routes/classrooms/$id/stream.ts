@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 
-import { createEventStream } from "~/stream.server";
-import { getUserSession } from "~/utilities/auth";
+import { getUserSession } from "~/modules/auth0/auth";
+import { createEventStream } from "~/modules/serverSentEvents/stream.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await getUserSession(request);

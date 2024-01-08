@@ -1,10 +1,11 @@
 import { createCookie, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
-import { authenticator } from "~/auth0.server";
+import { authenticator } from "~/modules/auth0/auth0.server";
+
+import { destroySession, getSession } from "../auth0/auth";
 
 import { createDatabaseSessionStorage } from "./dbsession.server";
-import { destroySession, getSession } from "./utilities/auth";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 

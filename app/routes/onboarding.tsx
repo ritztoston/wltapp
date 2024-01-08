@@ -6,13 +6,13 @@ import * as z from "zod";
 
 import { InputField } from "~/components/Fields/InputField";
 import { User, updateUser } from "~/models/user.server";
-import { DEFAULT_AUTH_HOME, validationAction } from "~/utilities";
 import {
   authenticate,
   commitSession,
   getSession,
   useUser,
-} from "~/utilities/auth";
+} from "~/modules/auth0/auth";
+import { DEFAULT_AUTH_HOME, validationAction } from "~/utilities";
 
 interface Fields {
   firstName: string;

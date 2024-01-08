@@ -2,8 +2,6 @@ import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
 import type { ZodSchema, ZodError } from "zod";
 
-import { ActionErrors } from "./types";
-
 export const DEFAULT_AUTH_HOME = "/classrooms";
 
 export const classNames = (...classes: string[]) => {
@@ -69,7 +67,6 @@ export const generateRandomCode = (length = 5) => {
   return code;
 };
 
-
 export const getUserFullName = (
   a: string,
   b: string,
@@ -82,6 +79,7 @@ export const getInitials = (word: string): string => {
   return word.charAt(0);
 };
 
+export type ActionErrors<T> = Partial<Record<keyof T, string>>;
 export function validationAction<ActionInput>({
   body,
   schema,

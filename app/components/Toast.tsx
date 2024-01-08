@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useEffect, Fragment, useState } from "react";
 
-import { Toast as T } from "~/toast.server";
+import { Toast as T } from "~/modules/toasts/toast.server";
 import { classNames } from "~/utilities";
 
 const DEFAULT_TIMER_DELAY = 5000;
