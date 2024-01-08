@@ -5,7 +5,7 @@ import {
   json,
 } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { ClassCode } from "~/components/Classrooms/Classroom/ClassCode";
 import { Feeds } from "~/components/Classrooms/Classroom/Feeds";
@@ -103,7 +103,7 @@ export default function ClassroomPage() {
   useEffect(() => {
     // set re-fetch to posts when classroom data changes
     setShouldFetch(true);
-  }, [classroom.id]);
+  }, [classroom.posts]);
 
   useEffect(() => {
     if (fetcher.data && fetcher.data.classroom.posts.length > 0) {
@@ -113,12 +113,12 @@ export default function ClassroomPage() {
     }
   }, [classroom, fetcher.data]);
 
-  const loadNextHandler = () => {
+  const loadNextHandler = useCallback(() => {
     fetcher.load(
       "?cursor=".concat(classroom.posts[classroom.posts.length - 1].id),
     );
     setShouldFetch(false);
-  };
+  }, [classroom.posts, fetcher]);
 
   return (
     <Content

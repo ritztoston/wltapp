@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useCallback, useEffect, useRef } from "react";
 
 interface LocalProps {
   children: ReactNode;
@@ -16,24 +16,24 @@ export const InfiniteScroller = (props: LocalProps) => {
     scrollListener.current = loadNext;
   }, [loadNext]);
 
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+    const scrollEnded = scrollTop + clientHeight >= scrollHeight - 100;
+
+    if (!shouldFetch) return;
+    if (isLoading) return;
+
+    if (scrollEnded) {
+      scrollListener.current();
+    }
+  }, [isLoading, shouldFetch]);
+
   useEffect(() => {
-    const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const scrollTop = container.scrollTop;
-      const scrollHeight = container.scrollHeight;
-      const clientHeight = container.clientHeight;
-      const scrollEnded = scrollTop + clientHeight >= scrollHeight - 100;
-
-      if (!shouldFetch) return;
-      if (isLoading) return;
-
-      if (scrollEnded) {
-        scrollListener.current();
-      }
-    };
-
     const container = containerRef.current;
     if (container) {
       container.addEventListener("scroll", handleScroll);
@@ -42,7 +42,7 @@ export const InfiniteScroller = (props: LocalProps) => {
         container.removeEventListener("scroll", handleScroll);
       };
     }
-  }, [isLoading, shouldFetch]);
+  }, [handleScroll]);
 
   return (
     <div
